@@ -18,7 +18,7 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# CSS styling (remains the same)
+# CSS styling with the new info-card styles included
 st.markdown("""
 <style>
     .main-header {
@@ -87,10 +87,55 @@ st.markdown("""
         transform: scale(1.05);
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
+
+    /* CSS for the new information cards */
+    .info-card-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 1.5rem;
+    }
+    .info-card {
+        background: linear-gradient(145deg, #2a2a3e, #3a3a52);
+        border-radius: 20px;
+        padding: 25px;
+        color: #f0f0f0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        border: 1px solid #4a4a6a;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .info-card h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #90f0ff;
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #4a4a6a;
+        padding-bottom: 10px;
+    }
+    .info-card ul {
+        list-style-type: none;
+        padding-left: 0;
+        flex-grow: 1;
+    }
+    .info-card li {
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        transition: background-color 0.3s ease;
+    }
+    .info-card li:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# Disease information database (Only the 3 specified diseases)
+# Disease information database
 DISEASE_INFO = {
     "Petal Blight": {
         "description": "A petal blight disease caused by the fungus Botrytis cinerea.",
@@ -112,7 +157,7 @@ DISEASE_INFO = {
     }
 }
 
-# UPDATED: Only disease classes are now relevant
+# Only disease classes are now relevant
 DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
 
 @st.cache_resource
@@ -146,7 +191,6 @@ def predict_disease_yolo(model, image):
                 for i in range(len(boxes)):
                     class_name = model.names[int(classes[i])]
                     
-                    # UPDATED: Only append if the detected class is one of the diseases we care about
                     if class_name in DISEASE_CLASSES:
                         detection = {
                             "disease": class_name,
@@ -174,13 +218,10 @@ def draw_detection_on_image(image, detections):
         confidence = detection["confidence"]
         
         x1, y1, x2, y2 = map(int, box)
-        
-        # UPDATED: All detections are diseases, so color is always red
         color = (0, 0, 255)  # Red for disease
             
         cv2.rectangle(cv_image, (x1, y1), (x2, y2), color, 2)
         
-        # UPDATED: Label is always the disease name
         label = f"{disease}: {confidence:.1%}"
         label_size, _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
         cv2.rectangle(cv_image, (x1, y1 - label_size[1] - 10), (x1 + label_size[0], y1), color, -1)
@@ -189,38 +230,43 @@ def draw_detection_on_image(image, detections):
     return cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
 
 def analyze_detections(detections):
-    """
-    UPDATED: Simplified analysis. If there are any detections, it's a disease. Otherwise, no disease is detected.
-    Returns: (status, message, diseases_found)
-    """
+    """Simplified analysis. If there are any detections, it's a disease. Otherwise, no disease is detected."""
     if not detections:
-        # This now means no relevant diseases were found.
         return "no_disease_detected", "No disease was detected on the plant.", []
     else:
-        # One or more diseases were found.
         disease_names = [d['disease'] for d in detections]
         return "diseased", f"Detected {len(disease_names)} area(s) of disease.", disease_names
 
 def display_disease_info(disease_name):
-    """Display disease information and recommendations."""
+    """Display disease information and recommendations in a modern card layout."""
     if disease_name in DISEASE_INFO:
         info = DISEASE_INFO[disease_name]
-        st.markdown(f"### 📋 Information & Recommendations for: {disease_name}")
-        st.write(f"**Description:** {info['description']}")
         
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.markdown("#### 🔍 Common Symptoms")
-            for symptom in info['symptoms']: 
-                st.write(f"• {symptom}")
-        with col2:
-            st.markdown("#### 🛡️ Prevention Methods")
-            for prevention in info['prevention']: 
-                st.write(f"• {prevention}")
-        with col3:
-            st.markdown("#### 💊 Treatment Methods")
-            for treatment in info['treatment']: 
-                st.write(f"• {treatment}")
+        st.markdown(f"### 📋 Information & Recommendations for: {disease_name}")
+
+        # Create HTML list items for each category
+        symptoms_list = ''.join([f"<li>{symptom}</li>" for symptom in info['symptoms']])
+        prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
+        treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
+
+        # Render the three cards in a container using HTML
+        card_html = f"""
+        <div class="info-card-container">
+            <div class="info-card">
+                <h4>🔍 Common Symptoms</h4>
+                <ul>{symptoms_list}</ul>
+            </div>
+            <div class="info-card">
+                <h4>🛡️ Prevention Methods</h4>
+                <ul>{prevention_list}</ul>
+            </div>
+            <div class="info-card">
+                <h4>💊 Treatment Methods</h4>
+                <ul>{treatment_list}</ul>
+            </div>
+        </div>
+        """
+        st.markdown(card_html, unsafe_allow_html=True)
 
 def main():
     st.markdown('<h1 class="main-header">🌺 Orchid Disease Detection System</h1>', unsafe_allow_html=True)
@@ -233,7 +279,6 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
-        # UPDATED: Sidebar now only lists the three diseases
         st.markdown("### 📋 Detectable Diseases:")
         st.write("🦠 Petal Blight")
         st.write("🍃 Brown Spot")
@@ -263,10 +308,8 @@ def main():
                 annotated_image = draw_detection_on_image(image, detections)
                 st.image(annotated_image, caption="AI Detection Result", use_container_width=True)
             
-            # UPDATED: Simplified analysis logic
             status, message, diseases_found = analyze_detections(detections)
             
-            # UPDATED: Logic now handles only two states: 'no_disease_detected' or 'diseased'
             if status == "no_disease_detected":
                 st.markdown(f"""
                 <div class="healthy-result">
@@ -276,7 +319,6 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # NEW: General recommendations for when no disease is found
                 st.markdown("""
                 <div class="recommendation-card">
                     <h3>🌱 General Orchid Care Recommendations:</h3>
