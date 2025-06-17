@@ -18,7 +18,7 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# CSS styling with the new info-card styles included
+# CSS styling with the new colorful grid layout for info cards
 st.markdown("""
 <style>
     .main-header {
@@ -88,49 +88,86 @@ st.markdown("""
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    /* CSS for the new information cards */
-    .info-card-container {
-        display: flex;
-        justify-content: space-between;
+    /* Updated CSS for information cards with 2x1 grid and more colors */
+    .info-card-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns for the top cards */
         gap: 20px;
         margin-top: 1.5rem;
     }
+
     .info-card {
-        background: linear-gradient(145deg, #2a2a3e, #3a3a52);
+        background: linear-gradient(145deg, #ffc371, #ff5f6d); /* Colorful gradient */
         border-radius: 20px;
         padding: 25px;
-        color: #f0f0f0;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        border: 1px solid #4a4a6a;
-        height: 100%;
+        color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        border-left: 1px solid rgba(255, 255, 255, 0.3);
         display: flex;
         flex-direction: column;
     }
+
     .info-card h4 {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #90f0ff;
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
         text-align: center;
         margin-bottom: 20px;
-        border-bottom: 2px solid #4a4a6a;
-        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        padding-bottom: 15px;
     }
+
     .info-card ul {
         list-style-type: none;
         padding-left: 0;
         flex-grow: 1;
     }
+
     .info-card li {
-        background-color: rgba(255, 255, 255, 0.05);
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 8px;
+        background-color: rgba(0, 0, 0, 0.15);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
         font-size: 0.95rem;
         line-height: 1.4;
-        transition: background-color 0.3s ease;
     }
-    .info-card li:hover {
-        background-color: rgba(255, 255, 255, 0.15);
+    
+    .info-card-treatment {
+        background: linear-gradient(145deg, #84fab0, #8fd3f4); /* Green/blue gradient */
+        grid-column: 1 / -1; /* Make this card span both columns */
+        border-radius: 20px;
+        padding: 25px;
+        color: #1f3b4d; /* Darker text for better contrast */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        border-top: 1px solid rgba(255, 255, 255, 0.5);
+        border-left: 1px solid rgba(255, 255, 255, 0.5);
+        margin-top: 20px;
+    }
+
+    .info-card-treatment h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1f3b4d;
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(31, 59, 77, 0.3);
+        padding-bottom: 15px;
+    }
+
+    .info-card-treatment ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .info-card-treatment li {
+        background-color: rgba(255, 255, 255, 0.4);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        line-height: 1.4;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -172,25 +209,25 @@ def load_model():
 
 def predict_disease_yolo(model, image):
     """Make prediction using YOLO model and return only detections of specified diseases."""
-    if model is None: 
+    if model is None:
         return []
-    
+
     try:
         if isinstance(image, Image.Image):
             image = np.array(image.convert("RGB"))
-        
+
         results = model(image, conf=0.25)
         detections = []
-        
+
         for result in results:
             if result.boxes is not None and len(result.boxes) > 0:
                 confidences = result.boxes.conf.cpu().numpy()
                 classes = result.boxes.cls.cpu().numpy()
                 boxes = result.boxes.xyxy.cpu().numpy()
-                
+
                 for i in range(len(boxes)):
                     class_name = model.names[int(classes[i])]
-                    
+
                     if class_name in DISEASE_CLASSES:
                         detection = {
                             "disease": class_name,
@@ -198,9 +235,9 @@ def predict_disease_yolo(model, image):
                             "box": boxes[i],
                         }
                         detections.append(detection)
-        
+
         return detections
-        
+
     except Exception as e:
         st.error(f"Prediction error: {str(e)}")
         return []
@@ -211,22 +248,22 @@ def draw_detection_on_image(image, detections):
         image = Image.fromarray(image)
 
     cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-    
+
     for detection in detections:
         box = detection["box"]
         disease = detection["disease"]
         confidence = detection["confidence"]
-        
+
         x1, y1, x2, y2 = map(int, box)
         color = (0, 0, 255)  # Red for disease
-            
+
         cv2.rectangle(cv_image, (x1, y1), (x2, y2), color, 2)
-        
+
         label = f"{disease}: {confidence:.1%}"
         label_size, _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
         cv2.rectangle(cv_image, (x1, y1 - label_size[1] - 10), (x1 + label_size[0], y1), color, -1)
         cv2.putText(cv_image, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-        
+
     return cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
 
 def analyze_detections(detections):
@@ -238,20 +275,21 @@ def analyze_detections(detections):
         return "diseased", f"Detected {len(disease_names)} area(s) of disease.", disease_names
 
 def display_disease_info(disease_name):
-    """Display disease information and recommendations in a modern card layout."""
+    """Display disease information and recommendations in a colorful, two-above-one card layout."""
     if disease_name in DISEASE_INFO:
-        info = DISEASE_INFO[disease_name]
-        
+        info = DISEASE_INFO.get(disease_name)
+        if not info:
+            return
+
         st.markdown(f"### 📋 Information & Recommendations for: {disease_name}")
 
-        # Create HTML list items for each category
         symptoms_list = ''.join([f"<li>{symptom}</li>" for symptom in info['symptoms']])
         prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
         treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
 
-        # Render the three cards in a container using HTML
+        # Renders the 2x1 top grid and the full-width bottom card
         card_html = f"""
-        <div class="info-card-container">
+        <div class="info-card-grid">
             <div class="info-card">
                 <h4>🔍 Common Symptoms</h4>
                 <ul>{symptoms_list}</ul>
@@ -260,7 +298,7 @@ def display_disease_info(disease_name):
                 <h4>🛡️ Prevention Methods</h4>
                 <ul>{prevention_list}</ul>
             </div>
-            <div class="info-card">
+            <div class="info-card-treatment">
                 <h4>💊 Treatment Methods</h4>
                 <ul>{treatment_list}</ul>
             </div>
@@ -270,7 +308,7 @@ def display_disease_info(disease_name):
 
 def main():
     st.markdown('<h1 class="main-header">🌺 Orchid Disease Detection System</h1>', unsafe_allow_html=True)
-    
+
     with st.sidebar:
         st.markdown("""
         <div class="sidebar-content">
@@ -278,38 +316,38 @@ def main():
             <p>An AI system to detect specific diseases on orchid plants using a YOLO model.</p>
         </div>
         """, unsafe_allow_html=True)
-        
+
         st.markdown("### 📋 Detectable Diseases:")
         st.write("🦠 Petal Blight")
         st.write("🍃 Brown Spot")
         st.write("🌿 Soft Rot")
-        
+
         st.markdown("### 📊 Model Accuracy:")
         st.progress(0.89)
         st.write("Average Accuracy: 89%")
-        
+
         st.markdown("### 💡 Usage Tips:")
         st.info("Use a photo with good lighting, focus on the orchid's leaf or flower, and ensure the image is not blurry.")
 
     model = load_model()
     tab1, tab2 = st.tabs(["📷 Camera Capture", "📤 Upload Image"])
-    
+
     def process_and_display_results(image):
         with st.spinner("Analyzing the image..."):
             detections = predict_disease_yolo(model, image)
-            
+
             st.markdown("---")
             st.subheader("Analysis Results")
-            
+
             col_res1, col_res2 = st.columns(2)
             with col_res1:
                 st.image(image, caption="Original Image", use_container_width=True)
             with col_res2:
                 annotated_image = draw_detection_on_image(image, detections)
                 st.image(annotated_image, caption="AI Detection Result", use_container_width=True)
-            
+
             status, message, diseases_found = analyze_detections(detections)
-            
+
             if status == "no_disease_detected":
                 st.markdown(f"""
                 <div class="healthy-result">
@@ -318,7 +356,7 @@ def main():
                     <p>Your orchid appears to be free from the detected diseases. Keep up the great care!</p>
                 </div>
                 """, unsafe_allow_html=True)
-                
+
                 st.markdown("""
                 <div class="recommendation-card">
                     <h3>🌱 General Orchid Care Recommendations:</h3>
@@ -332,11 +370,11 @@ def main():
                     </ul>
                 </div>
                 """, unsafe_allow_html=True)
-                
+
             elif status == "diseased":
                 most_common_disease = Counter(diseases_found).most_common(1)[0][0]
                 unique_diseases = list(set(diseases_found))
-                
+
                 st.markdown(f"""
                 <div class="detection-result">
                     <h2>⚠️ Disease Detected!</h2>
@@ -345,7 +383,7 @@ def main():
                     <p>Take immediate action to prevent the disease from spreading!</p>
                 </div>
                 """, unsafe_allow_html=True)
-                
+
                 display_disease_info(most_common_disease)
 
     with tab1:
@@ -355,7 +393,7 @@ def main():
             <p>Take a photo using your camera for instant disease analysis.</p>
         </div>
         """, unsafe_allow_html=True)
-        
+
         if not st.session_state.camera_activated:
             if st.button("📷 Activate Camera"):
                 st.session_state.camera_activated = True
@@ -363,7 +401,7 @@ def main():
         else:
             st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
             camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
-            
+
             if st.button("❌ Deactivate Camera"):
                 st.session_state.camera_activated = False
                 st.rerun()
@@ -371,7 +409,7 @@ def main():
             if camera_input is not None:
                 image = Image.open(camera_input)
                 process_and_display_results(image)
-    
+
     with tab2:
         st.markdown("""
         <div class="feature-card">
@@ -379,15 +417,15 @@ def main():
             <p>Upload a photo of your orchid plant from your gallery for analysis.</p>
         </div>
         """, unsafe_allow_html=True)
-        
+
         uploaded_file = st.file_uploader("Choose an orchid image", type=['jpg', 'jpeg', 'png'])
-        
+
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            
+
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
-    
+
     st.markdown("---")
     st.markdown("""
     <div style="text-align: center; color: #666; padding: 2rem;">
