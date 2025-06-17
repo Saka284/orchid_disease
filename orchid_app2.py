@@ -30,7 +30,6 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         margin-bottom: 2rem;
     }
-    
     .feature-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 1.5rem;
@@ -40,11 +39,7 @@ st.markdown("""
         box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         transition: transform 0.3s ease;
     }
-    
-    .feature-card:hover {
-        transform: translateY(-5px);
-    }
-    
+    .feature-card:hover { transform: translateY(-5px); }
     .detection-result {
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         padding: 2rem;
@@ -54,7 +49,6 @@ st.markdown("""
         margin: 1.5rem 0;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    
     .recommendation-card {
         background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         padding: 1.5rem;
@@ -63,7 +57,6 @@ st.markdown("""
         color: white;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-    
     .healthy-result {
         background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
         padding: 2rem;
@@ -73,17 +66,6 @@ st.markdown("""
         margin: 1.5rem 0;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    
-    .no-plant-result {
-        background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        color: #2d3436;
-        text-align: center;
-        margin: 1.5rem 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    
     .sidebar-content {
         background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
         padding: 1rem;
@@ -91,7 +73,6 @@ st.markdown("""
         color: white;
         margin: 1rem 0;
     }
-    
     .stButton > button {
         background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
         color: white;
@@ -102,7 +83,6 @@ st.markdown("""
         transition: all 0.3s ease;
         width: 100%;
     }
-    
     .stButton > button:hover {
         transform: scale(1.05);
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -110,65 +90,30 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Disease information database (Translated to English)
+# Disease information database (Only the 3 specified diseases)
 DISEASE_INFO = {
     "Petal Blight": {
         "description": "A petal blight disease caused by the fungus Botrytis cinerea.",
         "symptoms": ["Brown spots on flower petals", "Petals become soft and slimy", "Premature flower drop"],
-        "prevention": [
-            "Maintain good air circulation",
-            "Avoid excess humidity around the flowers",
-            "Remove faded flowers promptly",
-            "Spray a preventive fungicide during the rainy season"
-        ],
-        "treatment": [
-            "Cut off all infected flower parts",
-            "Apply a fungicide with the active ingredient iprodione",
-            "Reduce watering and humidity",
-            "Improve air ventilation around the plant",
-            "Spray with a 1% baking soda solution"
-        ]
+        "prevention": ["Maintain good air circulation", "Avoid excess humidity", "Remove faded flowers promptly"],
+        "treatment": ["Cut off all infected parts", "Apply a suitable fungicide", "Reduce watering and humidity"]
     },
     "Brown Spot": {
         "description": "A brown rot caused by the fungus Monilinia fructicola.",
         "symptoms": ["Brown spots on the pseudobulb", "Tissue becomes soft and rotten", "Appearance of brown-colored spores"],
-        "prevention": [
-            "Keep the area around the plant clean",
-            "Avoid injuring the pseudobulb",
-            "Ensure good drainage of the planting medium",
-            "Sterilize cutting tools before use"
-        ],
-        "treatment": [
-            "Cut the infected part down to healthy tissue",
-            "Apply fungicide paste to the wound",
-            "Replace contaminated planting medium",
-            "Spray with a copper fungicide",
-            "Isolate the plant to prevent spread"
-        ]
+        "prevention": ["Keep the area clean", "Avoid injuring the pseudobulb", "Ensure good drainage"],
+        "treatment": ["Cut infected tissue down to healthy areas", "Apply fungicide paste to the wound", "Isolate the plant"]
     },
     "Soft Rot": {
         "description": "A soft rot caused by the bacterium Erwinia carotovora.",
         "symptoms": ["Plant tissue becomes mushy", "A foul, rotting smell", "The infected part changes color"],
-        "prevention": [
-            "Avoid overwatering",
-            "Keep tools and planting medium clean",
-            "Ensure good air circulation",
-            "Avoid injuring the plant during maintenance"
-        ],
-        "treatment": [
-            "Cut off all infected parts",
-            "Dry the wound with a paper towel",
-            "Apply a bactericide like streptomycin",
-            "Reduce humidity around the plant",
-            "Replace the planting medium with a sterile one"
-        ]
+        "prevention": ["Avoid overwatering", "Keep tools and medium clean", "Ensure good air circulation"],
+        "treatment": ["Cut off all infected parts", "Apply a bactericide like streptomycin", "Reduce humidity"]
     }
 }
 
-# FIXED: Definition of healthy and disease classes with names matching the model
-HEALTHY_CLASSES = ["healthy_leaf", "healthy_flower", "Healty Leaf", "Healty Flower", "Healthy Leaf", "Healthy Flower"]
+# UPDATED: Only disease classes are now relevant
 DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
-ALL_CLASSES = HEALTHY_CLASSES + DISEASE_CLASSES
 
 @st.cache_resource
 def load_model():
@@ -181,7 +126,7 @@ def load_model():
         return None
 
 def predict_disease_yolo(model, image):
-    """Make prediction using YOLO model and return all detections."""
+    """Make prediction using YOLO model and return only detections of specified diseases."""
     if model is None: 
         return []
     
@@ -201,15 +146,14 @@ def predict_disease_yolo(model, image):
                 for i in range(len(boxes)):
                     class_name = model.names[int(classes[i])]
                     
-                    class_type = "healthy" if class_name in HEALTHY_CLASSES else "disease"
-                    
-                    detection = {
-                        "disease": class_name,
-                        "confidence": float(confidences[i]),
-                        "box": boxes[i],
-                        "class_type": class_type
-                    }
-                    detections.append(detection)
+                    # UPDATED: Only append if the detected class is one of the diseases we care about
+                    if class_name in DISEASE_CLASSES:
+                        detection = {
+                            "disease": class_name,
+                            "confidence": float(confidences[i]),
+                            "box": boxes[i],
+                        }
+                        detections.append(detection)
         
         return detections
         
@@ -218,7 +162,7 @@ def predict_disease_yolo(model, image):
         return []
 
 def draw_detection_on_image(image, detections):
-    """Draw all bounding boxes and labels on the image with different colors for healthy vs disease."""
+    """Draw all bounding boxes and labels on the image. All detections are red."""
     if not isinstance(image, Image.Image):
         image = Image.fromarray(image)
 
@@ -228,27 +172,16 @@ def draw_detection_on_image(image, detections):
         box = detection["box"]
         disease = detection["disease"]
         confidence = detection["confidence"]
-        class_type = detection["class_type"]
         
         x1, y1, x2, y2 = map(int, box)
         
-        # Different colors for healthy vs disease
-        if class_type == "healthy":
-            color = (0, 255, 0)  # Green for healthy
-        else:
-            color = (0, 0, 255)  # Red for disease
+        # UPDATED: All detections are diseases, so color is always red
+        color = (0, 0, 255)  # Red for disease
             
         cv2.rectangle(cv_image, (x1, y1), (x2, y2), color, 2)
         
-        # User-friendly labels
-        if disease in ["healthy_leaf", "Healty Leaf", "Healthy Leaf"]:
-            display_name = "Healthy Leaf"
-        elif disease in ["healthy_flower", "Healty Flower", "Healthy Flower"]:
-            display_name = "Healthy Flower"
-        else:
-            display_name = disease
-            
-        label = f"{display_name}: {confidence:.1%}"
+        # UPDATED: Label is always the disease name
+        label = f"{disease}: {confidence:.1%}"
         label_size, _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
         cv2.rectangle(cv_image, (x1, y1 - label_size[1] - 10), (x1 + label_size[0], y1), color, -1)
         cv2.putText(cv_image, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
@@ -257,36 +190,16 @@ def draw_detection_on_image(image, detections):
 
 def analyze_detections(detections):
     """
-    FIXED: Function to analyze detection results with improved logic
+    UPDATED: Simplified analysis. If there are any detections, it's a disease. Otherwise, no disease is detected.
     Returns: (status, message, diseases_found)
     """
     if not detections:
-        return "no_plant", "No orchid plant was detected in the image.", []
-    
-    # Separate detections by type
-    healthy_detections = [d for d in detections if d["class_type"] == "healthy"]
-    disease_detections = [d for d in detections if d["class_type"] == "disease"]
-    
-    if disease_detections:
-        # Disease detected - this is the priority
-        disease_names = [d['disease'] for d in disease_detections]
-        return "diseased", f"Detected {len(disease_detections)} diseased areas.", disease_names
-    
-    elif healthy_detections:
-        # FIXED: Only healthy parts were detected
-        healthy_parts = []
-        for d in healthy_detections:
-            if d['disease'] in ["healthy_leaf", "Healty Leaf", "Healthy Leaf"]:
-                healthy_parts.append('leaves')
-            elif d['disease'] in ["healthy_flower", "Healty Flower", "Healthy Flower"]:
-                healthy_parts.append('flowers')
-        
-        healthy_parts_str = ' and '.join(set(healthy_parts))
-        return "healthy", f"Healthy Plant - detected healthy {healthy_parts_str}.", []
-    
+        # This now means no relevant diseases were found.
+        return "no_disease_detected", "No disease was detected on the plant.", []
     else:
-        # No valid detections
-        return "no_plant", "No orchid plant was detected in the image.", []
+        # One or more diseases were found.
+        disease_names = [d['disease'] for d in detections]
+        return "diseased", f"Detected {len(disease_names)} area(s) of disease.", disease_names
 
 def display_disease_info(disease_name):
     """Display disease information and recommendations."""
@@ -316,13 +229,12 @@ def main():
         st.markdown("""
         <div class="sidebar-content">
             <h2>🎯 Application Features</h2>
-            <p>An AI system to detect orchid plant diseases using a YOLO model with 5 detection classes.</p>
+            <p>An AI system to detect specific diseases on orchid plants using a YOLO model.</p>
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("### 📋 Detectable Classes:")
-        st.write("✅ Healthy Leaf")
-        st.write("🌸 Healthy Flower") 
+        # UPDATED: Sidebar now only lists the three diseases
+        st.markdown("### 📋 Detectable Diseases:")
         st.write("🦠 Petal Blight")
         st.write("🍃 Brown Spot")
         st.write("🌿 Soft Rot")
@@ -351,38 +263,30 @@ def main():
                 annotated_image = draw_detection_on_image(image, detections)
                 st.image(annotated_image, caption="AI Detection Result", use_container_width=True)
             
-            # FIXED: Analyze results with improved logic
+            # UPDATED: Simplified analysis logic
             status, message, diseases_found = analyze_detections(detections)
             
-            
-            if status == "no_plant":
-                st.markdown(f"""
-                <div class="no-plant-result">
-                    <h2>🔍 No Plant Detected</h2>
-                    <p>{message}</p>
-                    <p>Please ensure the image clearly shows an orchid leaf or flower.</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-            elif status == "healthy":
+            # UPDATED: Logic now handles only two states: 'no_disease_detected' or 'diseased'
+            if status == "no_disease_detected":
                 st.markdown(f"""
                 <div class="healthy-result">
-                    <h2>✅ Plant is Healthy!</h2>
+                    <h2>✅ No Disease Detected!</h2>
                     <p>{message}</p>
-                    <p>No signs of disease were found on your orchid plant.</p>
+                    <p>Your orchid appears to be free from the detected diseases. Keep up the great care!</p>
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Display care tips for a healthy plant
+                # NEW: General recommendations for when no disease is found
                 st.markdown("""
                 <div class="recommendation-card">
-                    <h3>🌱 Advanced Care Tips:</h3>
+                    <h3>🌱 General Orchid Care Recommendations:</h3>
                     <ul>
-                        <li>Maintain air humidity between 50-70%</li>
-                        <li>Provide sufficient indirect sunlight</li>
-                        <li>Water moderately, do not overwater</li>
-                        <li>Fertilize routinely once a month</li>
-                        <li>Inspect the plant regularly for early disease detection</li>
+                        <li><strong>Light:</strong> Provide bright, indirect sunlight. Avoid direct sun which can scorch leaves.</li>
+                        <li><strong>Watering:</strong> Water thoroughly when the growing medium is almost dry. Do not let it sit in water.</li>
+                        <li><strong>Humidity:</strong> Orchids thrive in 50-70% humidity. Consider a humidifier or a pebble tray.</li>
+                        <li><strong>Airflow:</strong> Good air circulation is crucial to prevent fungal and bacterial issues.</li>
+                        <li><strong>Fertilizing:</strong> Use a balanced orchid fertilizer weakly, weekly during the growing season.</li>
+                        <li><strong>Inspect Regularly:</strong> Check your plant often for any early signs of pests or disease.</li>
                     </ul>
                 </div>
                 """, unsafe_allow_html=True)
@@ -400,7 +304,6 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Display detailed info for the most common disease
                 display_disease_info(most_common_disease)
 
     with tab1:
@@ -448,7 +351,7 @@ def main():
     <div style="text-align: center; color: #666; padding: 2rem;">
         <p>🌺 Orchid Disease Detection System | Powered by AI & YOLO</p>
         <p>Developed with ❤️ for orchid enthusiasts</p>
-        <p>The model can detect: Healthy Leaf, Healthy Flower, and 3 Types of Diseases</p>
+        <p>The model can detect 3 Types of Diseases: Petal Blight, Brown Spot, and Soft Rot</p>
     </div>
     """, unsafe_allow_html=True)
 
