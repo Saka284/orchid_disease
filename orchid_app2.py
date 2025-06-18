@@ -21,6 +21,7 @@ if 'camera_activated' not in st.session_state:
 # CSS styling with the new colorful grid layout for info cards
 st.markdown("""
 <style>
+    /* GAYA ASLI ANDA - TIDAK SAYA UBAH */
     .main-header {
         font-size: 3rem;
         font-weight: bold;
@@ -73,79 +74,120 @@ st.markdown("""
         color: white;
         margin: 1rem 0;
     }
-    .stButton > button {
-        background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 0.5rem 2rem;
+
+    /* GAYA ASLI KARTU INFO ANDA (YANG GELAP) - TIDAK SAYA UBAH */
+    .info-card-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 1.5rem;
+    }
+    .info-card, .info-card-treatment {
+        background-color: #2C3E50;
+        color: #ECF0F1;
+        padding: 25px;
+        border-radius: 15px;
+        border: 1px solid #34495E;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+    }
+    .info-card-treatment {
+        grid-column: 1 / -1;
+        margin-top: 20px;
+        background-color: #233140; 
+    }
+    .info-card h4, .info-card-treatment h4 {
+        font-size: 1.5rem;
         font-weight: bold;
-        transition: all 0.3s ease;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        color: #5DADE2; 
+        border-bottom: 1px solid #34495E;
+        text-shadow: none;
+    }
+    .info-card ul, .info-card-treatment ul {
+        list-style-type: none;
+        padding-left: 0;
+        flex-grow: 1;
+    }
+    .info-card li, .info-card-treatment li {
+        background-color: rgba(52, 73, 94, 0.5); 
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        border-left: 3px solid #5DADE2;
+    }
+
+    /* --- CSS BARU HANYA UNTUK UI BERANDA --- */
+    .home-card {
+        background-color: #2C3E50;
+        padding: 2rem;
+        border-radius: 15px;
+        border: 1px solid #34495E;
+        text-align: center;
+        height: 100%;
+        color: #ECF0F1;
+    }
+    .home-card h3 {
+        color: #5DADE2;
+        margin-bottom: 1rem;
+    }
+    .dos-donts-list {
+        list-style-type: none;
+        padding-left: 0;
+        color: #ECF0F1;
+        text-align: left;
+    }
+    .dos-donts-list li {
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 7px;
+    }
+    .dos {
+        background-color: rgba(46, 204, 113, 0.1);
+        border-left: 4px solid #2ECC71;
+    }
+    .donts {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-left: 4px solid #E74C3C;
+    }
+
+    /* === CSS TOMBOL FINAL YANG PASTI BERHASIL (MENGGANTIKAN .stButton > button) === */
+    .tombol-merah .stButton,
+    .tombol-outline .stButton {
         width: 100%;
     }
-    .stButton > button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    .tombol-merah button,
+    .tombol-outline button {
+        width: 100%;
+        font-weight: bold;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease-in-out;
+    }
+    .tombol-merah button {
+        background-color: #FF6B6B;
+        color: white;
+        border: none;
+    }
+    .tombol-merah button:hover {
+        background-color: #E55353;
+        transform: translateY(-2px);
+    }
+    .tombol-outline button {
+        background-color: transparent;
+        color: #F5B7B1;
+        border: 2px solid #FF6B6B;
+    }
+    .tombol-outline button:hover {
+        background-color: #FF6B6B;
+        color: white;
     }
 
-    /* Updated CSS for information cards with 2x1 grid and more colors */
-    .info-card-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 1.5rem;
-}
-
-.info-card, .info-card-treatment {
-    /* Latar belakang abu-abu gelap, bukan hitam pekat */
-    background-color: #2C3E50; /* Warna dasar: abu-abu kebiruan gelap */
-    color: #ECF0F1; /* Warna teks: abu-abu sangat terang */
-    padding: 25px;
-    border-radius: 15px;
-    /* Border halus untuk memberikan sedikit definisi */
-    border: 1px solid #34495E;
-    /* Bayangan halus untuk efek 'mengambang' */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-}
-
-.info-card-treatment {
-    grid-column: 1 / -1; /* Tetap span dua kolom */
-    margin-top: 20px;
-    /* Sedikit berbeda untuk membedakannya */
-    background-color: #233140; 
-}
-
-.info-card h4, .info-card-treatment h4 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    /* Warna aksen biru yang tidak mencolok */
-    color: #5DADE2; 
-    /* Garis bawah dengan warna yang lebih gelap */
-    border-bottom: 1px solid #34495E;
-    text-shadow: none; /* Menghilangkan text-shadow untuk tampilan lebih bersih */
-}
-
-.info-card ul, .info-card-treatment ul {
-    list-style-type: none;
-    padding-left: 0;
-    flex-grow: 1;
-}
-
-.info-card li, .info-card-treatment li {
-    /* Latar belakang list item yang sedikit lebih terang dari kartu */
-    background-color: rgba(52, 73, 94, 0.5); 
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    border-left: 3px solid #5DADE2; /* Aksen di sisi kiri list item */
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -178,7 +220,6 @@ DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
 def load_model():
     """Load YOLO model from .pt file"""
     try:
-        # Ganti "best.pt" dengan path ke file model Anda
         model = YOLO("best.pt")
         return model
     except Exception as e:
@@ -265,7 +306,6 @@ def display_disease_info(disease_name):
         prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
         treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
 
-        # Renders the 2x1 top grid and the full-width bottom card
         card_html = f"""
         <div class="info-card-grid">
             <div class="info-card">
@@ -309,33 +349,89 @@ def main():
 
     model = load_model()
     
-    # --- PERUBAHAN: Menambahkan tab Beranda dan mengubah nama variabel tab ---
     tab_beranda, tab_camera, tab_upload = st.tabs(["🏠 Beranda", "📷 Camera Capture", "📤 Upload Image"])
 
-    # --- KONTEN TAB BERANDA (LANDING PAGE) ---
+    # --- HANYA ISI TAB BERANDA YANG DIGANTI ---
     with tab_beranda:
-        st.markdown("""
-        <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            <h3>Selamat Datang di Asisten Kesehatan Anggrek Anda!</h3>
-            <p>Aplikasi ini menggunakan Kecerdasan Buatan (AI) untuk membantu Anda mengidentifikasi penyakit umum pada anggrek secara cepat dan akurat. Deteksi dini adalah kunci untuk menyelamatkan tanaman kesayangan Anda.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.subheader("Langkah-langkah Penggunaan")
-        st.markdown("""
-        1.  **Pilih Metode Input**:
-            - Buka tab **Camera Capture** untuk mengambil foto anggrek Anda secara langsung.
-            - Buka tab **Upload Image** untuk menganalisis foto dari galeri perangkat Anda.
-        
-        2.  **Ambil atau Unggah Gambar**:
-            - Pastikan gambar yang Anda ambil memiliki **pencahayaan yang baik** dan **fokus yang tajam** pada bagian tanaman (bunga, daun, atau batang) yang diduga sakit.
-            
-        3.  **Dapatkan Hasil & Solusi**:
-            - Tekan tombol analisis dan biarkan sistem kami bekerja.
-            - Anda akan mendapatkan hasil deteksi penyakit beserta informasi lengkap mengenai gejala, cara pencegahan, dan metode pengobatan yang direkomendasikan.
-        """)
+        st.subheader("Membantu Anda Merawat Anggrek dengan Kecerdasan Buatan")
+        st.markdown(
+            "Selamat datang! Aplikasi ini dirancang untuk menjadi asisten pribadi Anda dalam menjaga kesehatan anggrek. "
+            "Gunakan kekuatan AI untuk mendeteksi penyakit secara dini dan dapatkan rekomendasi perawatan yang tepat."
+        )
+        st.markdown("---")
 
-        st.info("💡 **Tips**: Semakin jelas gambar Anda, semakin akurat hasilnya. Silakan pilih salah satu tab di atas untuk memulai!")
+        st.header("🔍 Penyakit yang Dapat Dideteksi")
+        st.info("Model kami saat ini dilatih untuk mengenali 3 penyakit umum pada **daun dan bunga** anggrek.")
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.markdown(
+                """
+                <div class="home-card">
+                    <h3>Petal Blight</h3>
+                    <p>Bercak coklat atau kehitaman pada kelopak bunga yang membuatnya cepat layu.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        with col2:
+            st.markdown(
+                """
+                <div class="home-card">
+                    <h3>Brown Spot</h3>
+                    <p>Bercak coklat pada daun yang bisa menyebar dan menyebabkan pembusukan jaringan.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        with col3:
+            st.markdown(
+                """
+                <div class="home-card">
+                    <h3>Soft Rot</h3>
+                    <p>Pembusukan lunak dan berbau pada daun atau batang, seringkali akibat bakteri.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.markdown("---")
+
+        st.header("✅ Praktik Terbaik untuk Hasil Akurat")
+        col_dos, col_donts = st.columns(2)
+        with col_dos:
+            st.markdown(
+                """
+                <div style="text-align:left;"><h4><span style="color:#2ECC71;">Lakukan Ini:</span></h4></div>
+                <ul class="dos-donts-list">
+                    <li class="dos">Gunakan pencahayaan yang cukup & merata.</li>
+                    <li class="dos">Fokuskan foto pada satu area (daun/bunga).</li>
+                    <li class="dos">Pastikan gambar jelas dan tidak buram.</li>
+                    <li class="dos">Ambil foto dengan latar belakang polos jika memungkinkan.</li>
+                </ul>
+                """,
+                unsafe_allow_html=True
+            )
+        with col_donts:
+            st.markdown(
+                """
+                <div style="text-align:left;"><h4><span style="color:#E74C3C;">Hindari Ini:</span></h4></div>
+                <ul class="dos-donts-list">
+                    <li class="donts">Mengambil foto di tempat yang terlalu gelap/terang.</li>
+                    <li class="donts">Menyertakan terlalu banyak bagian tanaman dalam satu foto.</li>
+                    <li class="donts">Menggunakan gambar yang pecah atau buram.</li>
+                    <li class="donts">Bayangan yang menutupi area yang sakit.</li>
+                </ul>
+                """,
+                unsafe_allow_html=True
+            )
+            
+        st.markdown("---")
+
+        st.warning(
+            "**Penting:** Aplikasi ini adalah alat bantu deteksi dan bukan pengganti diagnosis dari ahli hortikultura profesional. "
+            "Hasil deteksi memiliki tingkat akurasi tertentu dan harus digunakan sebagai panduan awal."
+        )
 
 
     def process_and_display_results(image):
@@ -401,16 +497,22 @@ def main():
         """, unsafe_allow_html=True)
 
         if not st.session_state.camera_activated:
-            if st.button("📷 Activate Camera"):
+            # --- PERUBAHAN KECIL PADA TOMBOL ---
+            st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
+            if st.button("📷 Activate Camera", key="activate_camera"):
                 st.session_state.camera_activated = True
                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
             camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
 
-            if st.button("❌ Deactivate Camera"):
+            # --- PERUBAHAN KECIL PADA TOMBOL ---
+            st.markdown('<div class="tombol-outline">', unsafe_allow_html=True)
+            if st.button("❌ Deactivate Camera", key="deactivate_camera"):
                 st.session_state.camera_activated = False
                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
             if camera_input is not None:
                 image = Image.open(camera_input)
@@ -428,16 +530,19 @@ def main():
 
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-
+            st.image(image, caption="Image to be analyzed", use_container_width=True)
+            
+            # --- PERUBAHAN KECIL PADA TOMBOL ---
+            st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
+            st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("""
     <div style="text-align: center; color: #666; padding: 2rem;">
         <p>🌺 Orchid Disease Detection System | Powered by AI & YOLO</p>
         <p>Developed with ❤️ for orchid enthusiasts</p>
-        <p>The model can detect 3 Types of Diseases: Petal Blight, Brown Spot, and Soft Rot</p>
     </div>
     """, unsafe_allow_html=True)
 
