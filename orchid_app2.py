@@ -18,7 +18,7 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# CSS styling with the new colorful grid layout for info cards
+# --- CSS FINAL - GAYA ASLI ANDA DIKEMBALIKAN + PERBAIKAN TOMBOL ---
 st.markdown("""
 <style>
     /* GAYA ASLI ANDA - TIDAK SAYA UBAH */
@@ -74,55 +74,91 @@ st.markdown("""
         color: white;
         margin: 1rem 0;
     }
-
-    /* GAYA ASLI KARTU INFO ANDA (YANG GELAP) - TIDAK SAYA UBAH */
     .info-card-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
         margin-top: 1.5rem;
     }
-    .info-card, .info-card-treatment {
-        background-color: #2C3E50;
-        color: #ECF0F1;
+    .info-card {
+        background: linear-gradient(145deg, #ffc371, #ff5f6d);
+        border-radius: 20px;
         padding: 25px;
-        border-radius: 15px;
-        border: 1px solid #34495E;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
         display: flex;
         flex-direction: column;
     }
-    .info-card-treatment {
-        grid-column: 1 / -1;
-        margin-top: 20px;
-        background-color: #233140; 
-    }
-    .info-card h4, .info-card-treatment h4 {
+    .info-card h4 {
         font-size: 1.5rem;
         font-weight: bold;
+        color: white;
         text-align: center;
         margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         padding-bottom: 15px;
-        color: #5DADE2; 
-        border-bottom: 1px solid #34495E;
-        text-shadow: none;
     }
-    .info-card ul, .info-card-treatment ul {
+    .info-card ul {
         list-style-type: none;
         padding-left: 0;
         flex-grow: 1;
     }
-    .info-card li, .info-card-treatment li {
-        background-color: rgba(52, 73, 94, 0.5); 
+    .info-card li {
+        background-color: rgba(0, 0, 0, 0.15);
         padding: 12px;
         border-radius: 10px;
         margin-bottom: 10px;
         font-size: 0.95rem;
         line-height: 1.4;
-        border-left: 3px solid #5DADE2;
+    }
+    .info-card-treatment {
+        background: linear-gradient(145deg, #84fab0, #8fd3f4);
+        grid-column: 1 / -1;
+        border-radius: 20px;
+        padding: 25px;
+        color: #1f3b4d;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        margin-top: 20px;
+    }
+    .info-card-treatment h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1f3b4d;
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(31, 59, 77, 0.3);
+        padding-bottom: 15px;
+    }
+    .info-card-treatment ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .info-card-treatment li {
+        background-color: rgba(255, 255, 255, 0.4);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        line-height: 1.4;
     }
 
-    /* --- CSS BARU HANYA UNTUK UI BERANDA --- */
+    /* === BAGIAN 1: GAYA TOMBOL ASLI ANDA DIKEMBALIKAN SEBAGAI DEFAULT === */
+    .stButton > button {
+        background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 0.5rem 2rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    .stButton > button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    /* === BAGIAN 2: CSS BARU UNTUK UI BERANDA === */
     .home-card {
         background-color: #2C3E50;
         padding: 2rem;
@@ -156,38 +192,31 @@ st.markdown("""
         border-left: 4px solid #E74C3C;
     }
 
-    /* === CSS TOMBOL FINAL YANG PASTI BERHASIL (MENGGANTIKAN .stButton > button) === */
-    .tombol-merah .stButton,
-    .tombol-outline .stButton {
-        width: 100%;
-    }
-    .tombol-merah button,
-    .tombol-outline button {
-        width: 100%;
-        font-weight: bold;
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        transition: all 0.2s ease-in-out;
-    }
+    /* === BAGIAN 3: CSS UNTUK MENIMPA (OVERRIDE) GAYA TOMBOL TERTENTU === */
     .tombol-merah button {
-        background-color: #FF6B6B;
-        color: white;
-        border: none;
+        background: #FF6B6B !important; /* !important untuk memastikan override */
+        color: white !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 1rem !important;
     }
     .tombol-merah button:hover {
-        background-color: #E55353;
-        transform: translateY(-2px);
+        background: #E55353 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: none !important;
     }
     .tombol-outline button {
-        background-color: transparent;
-        color: #F5B7B1;
-        border: 2px solid #FF6B6B;
+        background: transparent !important;
+        color: #F5B7B1 !important;
+        border: 2px solid #FF6B6B !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 1rem !important;
     }
     .tombol-outline button:hover {
-        background-color: #FF6B6B;
-        color: white;
+        background: #FF6B6B !important;
+        color: white !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -351,7 +380,7 @@ def main():
     
     tab_beranda, tab_camera, tab_upload = st.tabs(["🏠 Beranda", "📷 Camera Capture", "📤 Upload Image"])
 
-    # --- HANYA ISI TAB BERANDA YANG DIGANTI ---
+    # --- ISI TAB BERANDA BARU ---
     with tab_beranda:
         st.subheader("Membantu Anda Merawat Anggrek dengan Kecerdasan Buatan")
         st.markdown(
@@ -488,6 +517,7 @@ def main():
 
                 display_disease_info(most_common_disease)
 
+    # --- KONTEN TAB LAIN DENGAN PERUBAHAN MINIMAL HANYA PADA TOMBOL ---
     with tab_camera:
         st.markdown("""
         <div class="feature-card">
@@ -497,7 +527,7 @@ def main():
         """, unsafe_allow_html=True)
 
         if not st.session_state.camera_activated:
-            # --- PERUBAHAN KECIL PADA TOMBOL ---
+            # PERUBAHAN HANYA DI SINI
             st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("📷 Activate Camera", key="activate_camera"):
                 st.session_state.camera_activated = True
@@ -507,7 +537,7 @@ def main():
             st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
             camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
 
-            # --- PERUBAHAN KECIL PADA TOMBOL ---
+            # PERUBAHAN HANYA DI SINI
             st.markdown('<div class="tombol-outline">', unsafe_allow_html=True)
             if st.button("❌ Deactivate Camera", key="deactivate_camera"):
                 st.session_state.camera_activated = False
@@ -532,7 +562,7 @@ def main():
             image = Image.open(uploaded_file)
             st.image(image, caption="Image to be analyzed", use_container_width=True)
             
-            # --- PERUBAHAN KECIL PADA TOMBOL ---
+            # PERUBAHAN HANYA DI SINI
             st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
