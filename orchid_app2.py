@@ -18,14 +18,10 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# --- CSS FINAL DENGAN TEMA GELAP YANG KONSISTEN ---
+# --- CSS FINAL YANG SUDAH DIBERSIHKAN ---
 st.markdown("""
 <style>
-    /* BAGIAN 1: GAYA GLOBAL & HEADER */
-    body {
-        background-color: #1E1E1E; /* Latar belakang utama aplikasi */
-        color: #ECF0F1;
-    }
+    /* BAGIAN 1: SEMUA GAYA ASLI ANDA (TIDAK DIUBAH) */
     .main-header {
         font-size: 3rem;
         font-weight: bold;
@@ -35,52 +31,104 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         margin-bottom: 2rem;
     }
-
-    /* BAGIAN 2: GAYA KARTU DASAR YANG SERAGAM (UNTUK SEMUA KARTU) */
-    .feature-card, .sidebar-content, .recommendation-card, .home-card {
-        background-color: #2C3E50;
+    .feature-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 1.5rem;
         border-radius: 15px;
         color: white;
         margin: 1rem 0;
-        border: 1px solid #34495E;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-    .feature-card:hover {
-        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         transition: transform 0.3s ease;
     }
-    .home-card { /* Penyesuaian untuk kartu di Beranda */
+    .feature-card:hover { transform: translateY(-5px); }
+    .detection-result {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         padding: 2rem;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        margin: 1.5rem 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .recommendation-card {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-top: 1rem;
+        color: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .healthy-result {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        padding: 2rem;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        margin: 1.5rem 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .sidebar-content {
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem;
+        border-radius: 10px;
+        color: white;
+        margin: 1rem 0;
+    }
+    
+    /* GAYA TOMBOL ASLI ANDA DIKEMBALIKAN */
+    .stButton > button {
+        background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 0.5rem 2rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    .stButton > button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* BAGIAN 2: CSS BARU UNTUK UI BERANDA */
+    .home-card {
+        background-color: #2C3E50;
+        padding: 2rem;
+        border-radius: 15px;
+        border: 1px solid #34495E;
         text-align: center;
         height: 100%;
+        color: #ECF0F1;
     }
     .home-card h3 {
         color: #5DADE2;
         margin-bottom: 1rem;
     }
+    .dos-donts-list {
+        list-style-type: none;
+        padding-left: 0;
+        color: #ECF0F1;
+        text-align: left;
+    }
+    .dos-donts-list li {
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 7px;
+    }
+    .dos {
+        background-color: rgba(46, 204, 113, 0.1);
+        border-left: 4px solid #2ECC71;
+    }
+    .donts {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-left: 4px solid #E74C3C;
+    }
 
-    /* BAGIAN 3: GAYA KARTU HASIL DETEKSI (SEHAT/SAKIT) */
-    .detection-result, .healthy-result {
-        padding: 2rem;
-        border-radius: 20px;
-        text-align: center;
-        margin: 1.5rem 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    .healthy-result {
-        background-color: #1E4620; /* Hijau gelap */
-        border: 1px solid #2ECC71;
-    }
-    .detection-result {
-        background-color: #5D1B1B; /* Merah gelap */
-        border: 1px solid #E74C3C;
-    }
-    
-    /* BAGIAN 4: GAYA KARTU INFO PENYAKIT (SETELAH DETEKSI) */
+    /* BAGIAN 3: CSS YANG DIPERBAIKI HANYA UNTUK KARTU INFO PENYAKIT */
     .info-card-grid {
         display: grid;
-        grid-template-columns: 1fr; /* Diubah jadi 1 kolom, tersusun ke bawah */
+        grid-template-columns: 1fr 1fr; /* KEMBALI MENJADI 2 KOLOM */
         gap: 20px;
         margin-top: 1.5rem;
     }
@@ -90,8 +138,13 @@ st.markdown("""
         padding: 25px;
         border-radius: 15px;
         border: 1px solid #34495E;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         display: flex;
         flex-direction: column;
+    }
+    .info-card-treatment {
+        grid-column: 1 / -1; /* Aturan agar kartu treatment full-width di bawah */
+        margin-top: 20px;
     }
     .info-card h4, .info-card-treatment h4 {
         font-size: 1.5rem;
@@ -101,6 +154,7 @@ st.markdown("""
         padding-bottom: 15px;
         color: #5DADE2; 
         border-bottom: 1px solid #34495E;
+        text-shadow: none;
     }
     .info-card ul, .info-card-treatment ul {
         list-style-type: none;
@@ -115,39 +169,6 @@ st.markdown("""
         font-size: 0.95rem;
         line-height: 1.4;
         border-left: 3px solid #5DADE2;
-    }
-
-    /* BAGIAN 5: GAYA UI BERANDA LAINNYA */
-    .dos-donts-list {
-        list-style-type: none; padding-left: 0;
-        color: #ECF0F1; text-align: left;
-    }
-    .dos-donts-list li { margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 7px; }
-    .dos { background-color: rgba(46, 204, 113, 0.1); border-left: 4px solid #2ECC71; }
-    .donts { background-color: rgba(231, 76, 60, 0.1); border-left: 4px solid #E74C3C; }
-
-    /* BAGIAN 6: GAYA TOMBOL FINAL */
-    .stButton > button { /* Gaya default jika ada tombol tanpa wrapper */
-        font-weight: bold;
-    }
-    .tombol-merah button {
-        background-color: #FF6B6B;
-        color: white; border: none; border-radius: 10px;
-        padding: 0.75rem 1rem; transition: all 0.2s ease-in-out; width: 100%;
-    }
-    .tombol-merah button:hover {
-        background-color: #E55353;
-        transform: translateY(-2px);
-    }
-    .tombol-outline button {
-        background-color: transparent;
-        color: #F5B7B1; border: 2px solid #FF6B6B;
-        border-radius: 10px; padding: 0.75rem 1rem;
-        transition: all 0.2s ease-in-out; width: 100%;
-    }
-    .tombol-outline button:hover {
-        background-color: #FF6B6B;
-        color: white;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -433,41 +454,46 @@ def main():
 
                 display_disease_info(most_common_disease)
 
+    # --- KONTEN TAB LAIN DIKEMBALIKAN KE ASLI, TANPA PERUBAHAN TOMBOL ---
     with tab_camera:
-        st.markdown("""<div class="feature-card"><h3>📷 Detect with Camera Capture</h3><p>Take a photo using your camera for instant disease analysis.</p></div>""", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="feature-card">
+            <h3>📷 Detect with Camera Capture</h3>
+            <p>Take a photo using your camera for instant disease analysis.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
         if not st.session_state.camera_activated:
-            st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
-            if st.button("📷 Activate Camera", key="activate_camera"):
+            if st.button("📷 Activate Camera"):
                 st.session_state.camera_activated = True
                 st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
             camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
 
-            st.markdown('<div class="tombol-outline">', unsafe_allow_html=True)
-            if st.button("❌ Deactivate Camera", key="deactivate_camera"):
+            if st.button("❌ Deactivate Camera"):
                 st.session_state.camera_activated = False
                 st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
 
             if camera_input is not None:
                 image = Image.open(camera_input)
                 process_and_display_results(image)
 
     with tab_upload:
-        st.markdown("""<div class="feature-card"><h3>📤 Upload an Image</h3><p>Upload a photo of your orchid plant from your gallery for analysis.</p></div>""", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="feature-card">
+            <h3>📤 Upload an Image</h3>
+            <p>Upload a photo of your orchid plant from your gallery for analysis.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
         uploaded_file = st.file_uploader("Choose an orchid image", type=['jpg', 'jpeg', 'png'])
 
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
             
-            st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
-            st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("""
