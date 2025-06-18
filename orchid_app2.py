@@ -90,85 +90,62 @@ st.markdown("""
 
     /* Updated CSS for information cards with 2x1 grid and more colors */
     .info-card-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Two columns for the top cards */
-        gap: 20px;
-        margin-top: 1.5rem;
-    }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 1.5rem;
+}
 
-    .info-card {
-        background: linear-gradient(145deg, #ffc371, #ff5f6d); /* Colorful gradient */
-        border-radius: 20px;
-        padding: 25px;
-        color: white;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        border-left: 1px solid rgba(255, 255, 255, 0.3);
-        display: flex;
-        flex-direction: column;
-    }
+.info-card, .info-card-treatment {
+    /* Latar belakang abu-abu gelap, bukan hitam pekat */
+    background-color: #2C3E50; /* Warna dasar: abu-abu kebiruan gelap */
+    color: #ECF0F1; /* Warna teks: abu-abu sangat terang */
+    padding: 25px;
+    border-radius: 15px;
+    /* Border halus untuk memberikan sedikit definisi */
+    border: 1px solid #34495E;
+    /* Bayangan halus untuk efek 'mengambang' */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
 
-    .info-card h4 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: white;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        padding-bottom: 15px;
-    }
+.info-card-treatment {
+    grid-column: 1 / -1; /* Tetap span dua kolom */
+    margin-top: 20px;
+    /* Sedikit berbeda untuk membedakannya */
+    background-color: #233140; 
+}
 
-    .info-card ul {
-        list-style-type: none;
-        padding-left: 0;
-        flex-grow: 1;
-    }
+.info-card h4, .info-card-treatment h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    /* Warna aksen biru yang tidak mencolok */
+    color: #5DADE2; 
+    /* Garis bawah dengan warna yang lebih gelap */
+    border-bottom: 1px solid #34495E;
+    text-shadow: none; /* Menghilangkan text-shadow untuk tampilan lebih bersih */
+}
 
-    .info-card li {
-        background-color: rgba(0, 0, 0, 0.15);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-        line-height: 1.4;
-    }
-    
-    .info-card-treatment {
-        background: linear-gradient(145deg, #84fab0, #8fd3f4); /* Green/blue gradient */
-        grid-column: 1 / -1; /* Make this card span both columns */
-        border-radius: 20px;
-        padding: 25px;
-        color: #1f3b4d; /* Darker text for better contrast */
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        border-top: 1px solid rgba(255, 255, 255, 0.5);
-        border-left: 1px solid rgba(255, 255, 255, 0.5);
-        margin-top: 20px;
-    }
+.info-card ul, .info-card-treatment ul {
+    list-style-type: none;
+    padding-left: 0;
+    flex-grow: 1;
+}
 
-    .info-card-treatment h4 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #1f3b4d;
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(31, 59, 77, 0.3);
-        padding-bottom: 15px;
-    }
-
-    .info-card-treatment ul {
-        list-style-type: none;
-        padding-left: 0;
-    }
-
-    .info-card-treatment li {
-        background-color: rgba(255, 255, 255, 0.4);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-        line-height: 1.4;
-    }
+.info-card li, .info-card-treatment li {
+    /* Latar belakang list item yang sedikit lebih terang dari kartu */
+    background-color: rgba(52, 73, 94, 0.5); 
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    border-left: 3px solid #5DADE2; /* Aksen di sisi kiri list item */
+}
 </style>
 """, unsafe_allow_html=True)
 
