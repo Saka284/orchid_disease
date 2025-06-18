@@ -76,34 +76,43 @@ st.markdown("""
     .stButton > button {
         border: none;
         border-radius: 10px;
-        padding: 0.75rem 2rem; /* Sedikit lebih besar untuk tampilan modern */
+        padding: 0.75rem 2rem;
         font-weight: bold;
         transition: all 0.3s ease;
         width: 100%;
-    }
+        cursor: pointer; 
+}
 div[data-testid="stButton-activate_camera"] > button,
 div[data-testid="stButton-upload_analyze"] > button {
-    background: linear-gradient(90deg, #2980B9, #5DADE2); /* Gradien biru yang elegan */
+    /* Gradien merah yang cerah dan modern */
+    background: linear-gradient(90deg, #FF6B6B, #D9534F); 
     color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* Bayangan dengan warna merah untuk efek 'glow' */
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.25);
 }
 
-    div[data-testid="stButton-activate_camera"] > button:hover,
-    div[data-testid="stButton-upload_analyze"] > button:hover {
-        transform: translateY(-2px); /* Efek 'mengangkat' saat di-hover */
-        box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
-        filter: brightness(1.1); /* Sedikit lebih cerah */
-    }
+div[data-testid="stButton-activate_camera"] > button:hover,
+div[data-testid="stButton-upload_analyze"] > button:hover {
+    transform: translateY(-2px);
+    /* Bayangan 'glow' yang lebih kuat saat di-hover */
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    filter: brightness(1.1);
+}
+
+/* Gaya untuk TOMBOL SEKUNDER (Deactivate) dengan outline MERAH */
 div[data-testid="stButton-deactivate_camera"] > button {
     background-color: transparent;
-    color: #AAB7B8; /* Warna teks abu-abu terang */
-    border: 2px solid #34495E; /* Border warna gelap */
+    /* Warna teks merah yang lebih lembut */
+    color: #F5B7B1; 
+    /* Border dengan warna merah yang lebih gelap */
+    border: 2px solid #D9534F; 
 }
 
 div[data-testid="stButton-deactivate_camera"] > button:hover {
-    background-color: #34495E; /* Latar belakang terisi saat di-hover */
-    color: #ECF0F1; /* Teks menjadi lebih terang */
-    border-color: #5DADE2; /* Border berubah warna menjadi warna aksen */
+    /* Latar belakang terisi dengan warna merah gelap saat di-hover */
+    background-color: #D9534F;
+    color: white; /* Teks menjadi putih solid */
+    border-color: #FF6B6B; /* Border menjadi lebih cerah */
 }
     .info-card-grid {
     display: grid;
