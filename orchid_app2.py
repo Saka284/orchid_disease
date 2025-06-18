@@ -18,10 +18,14 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# --- CSS FINAL YANG SUDAH DIBERSIHKAN ---
+# --- CSS FINAL DENGAN TEMA GELAP YANG KONSISTEN ---
 st.markdown("""
 <style>
-    /* BAGIAN 1: SEMUA GAYA ASLI ANDA (TIDAK DIUBAH) */
+    /* BAGIAN 1: GAYA GLOBAL & HEADER */
+    body {
+        background-color: #1E1E1E; /* Latar belakang utama aplikasi */
+        color: #ECF0F1;
+    }
     .main-header {
         font-size: 3rem;
         font-weight: bold;
@@ -31,123 +35,119 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         margin-bottom: 2rem;
     }
-    .feature-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    /* BAGIAN 2: GAYA KARTU DASAR YANG SERAGAM (UNTUK SEMUA KARTU) */
+    .feature-card, .sidebar-content, .recommendation-card, .home-card {
+        background-color: #2C3E50;
         padding: 1.5rem;
         border-radius: 15px;
         color: white;
         margin: 1rem 0;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border: 1px solid #34495E;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
         transition: transform 0.3s ease;
     }
-    .feature-card:hover { transform: translateY(-5px); }
-    .detection-result {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    .home-card { /* Penyesuaian untuk kartu di Beranda */
+        padding: 2rem;
+        text-align: center;
+        height: 100%;
+    }
+    .home-card h3 {
+        color: #5DADE2;
+        margin-bottom: 1rem;
+    }
+
+    /* BAGIAN 3: GAYA KARTU HASIL DETEKSI (SEHAT/SAKIT) */
+    .detection-result, .healthy-result {
         padding: 2rem;
         border-radius: 20px;
-        color: white;
         text-align: center;
         margin: 1.5rem 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .recommendation-card {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin-top: 1rem;
-        color: white;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     .healthy-result {
-        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        color: white;
-        text-align: center;
-        margin: 1.5rem 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        background-color: #1E4620; /* Hijau gelap */
+        border: 1px solid #2ECC71;
     }
-    .sidebar-content {
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        color: white;
-        margin: 1rem 0;
+    .detection-result {
+        background-color: #5D1B1B; /* Merah gelap */
+        border: 1px solid #E74C3C;
     }
+    
+    /* BAGIAN 4: GAYA KARTU INFO PENYAKIT (SETELAH DETEKSI) */
     .info-card-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr; /* Diubah jadi 1 kolom, tersusun ke bawah */
         gap: 20px;
         margin-top: 1.5rem;
     }
-    .info-card {
-        background: linear-gradient(145deg, #ffc371, #ff5f6d);
-        border-radius: 20px;
+    .info-card, .info-card-treatment {
+        background-color: #2C3E50;
+        color: #ECF0F1;
         padding: 25px;
-        color: white;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        border-radius: 15px;
+        border: 1px solid #34495E;
         display: flex;
         flex-direction: column;
     }
-    .info-card h4 {
-        font-size: 1.5rem; font-weight: bold; color: white; text-align: center;
-        margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.3); padding-bottom: 15px;
+    .info-card h4, .info-card-treatment h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        color: #5DADE2; 
+        border-bottom: 1px solid #34495E;
     }
-    .info-card ul { list-style-type: none; padding-left: 0; flex-grow: 1; }
-    .info-card li {
-        background-color: rgba(0, 0, 0, 0.15); padding: 12px;
-        border-radius: 10px; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.4;
+    .info-card ul, .info-card-treatment ul {
+        list-style-type: none;
+        padding-left: 0;
+        flex-grow: 1;
     }
-    .info-card-treatment {
-        background: linear-gradient(145deg, #84fab0, #8fd3f4);
-        grid-column: 1 / -1; border-radius: 20px; padding: 25px; color: #1f3b4d;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25); margin-top: 20px;
+    .info-card li, .info-card-treatment li {
+        background-color: rgba(52, 73, 94, 0.5); 
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        border-left: 3px solid #5DADE2;
     }
-    .info-card-treatment h4 {
-        color: #1f3b4d; border-bottom: 1px solid rgba(31, 59, 77, 0.3);
-    }
-    .info-card-treatment li { background-color: rgba(255, 255, 255, 0.4); }
 
-    /* BAGIAN 2: CSS BARU UNTUK UI BERANDA */
-    .home-card {
-        background-color: #2C3E50; padding: 2rem; border-radius: 15px;
-        border: 1px solid #34495E; text-align: center; height: 100%; color: #ECF0F1;
+    /* BAGIAN 5: GAYA UI BERANDA LAINNYA */
+    .dos-donts-list {
+        list-style-type: none; padding-left: 0;
+        color: #ECF0F1; text-align: left;
     }
-    .home-card h3 { color: #5DADE2; margin-bottom: 1rem; }
-    .dos-donts-list { list-style-type: none; padding-left: 0; color: #ECF0F1; text-align: left; }
     .dos-donts-list li { margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 7px; }
     .dos { background-color: rgba(46, 204, 113, 0.1); border-left: 4px solid #2ECC71; }
     .donts { background-color: rgba(231, 76, 60, 0.1); border-left: 4px solid #E74C3C; }
 
-    /* BAGIAN 3: GAYA TOMBOL ASLI ANDA SEBAGAI DEFAULT */
-    .stButton > button {
-        background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
-        color: white; border: none; border-radius: 25px; padding: 0.5rem 2rem;
-        font-weight: bold; transition: all 0.3s ease; width: 100%;
+    /* BAGIAN 6: GAYA TOMBOL FINAL */
+    .stButton > button { /* Gaya default jika ada tombol tanpa wrapper */
+        font-weight: bold;
     }
-    .stButton > button:hover {
-        transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-
-    /* BAGIAN 4: CSS KHUSUS UNTUK MENIMPA GAYA TOMBOL TERTENTU */
     .tombol-merah button {
-        background: #FF6B6B !important;
-        border-radius: 10px !important;
+        background-color: #FF6B6B;
+        color: white; border: none; border-radius: 10px;
+        padding: 0.75rem 1rem; transition: all 0.2s ease-in-out; width: 100%;
     }
     .tombol-merah button:hover {
-        background: #E55353 !important;
-        transform: translateY(-2px) !important;
+        background-color: #E55353;
+        transform: translateY(-2px);
     }
     .tombol-outline button {
-        background: transparent !important;
-        color: #FF6B6B !important;
-        border: 2px solid #FF6B6B !important;
-        border-radius: 10px !important;
+        background-color: transparent;
+        color: #F5B7B1; border: 2px solid #FF6B6B;
+        border-radius: 10px; padding: 0.75rem 1rem;
+        transition: all 0.2s ease-in-out; width: 100%;
     }
     .tombol-outline button:hover {
-        background: #FF6B6B !important;
-        color: white !important;
-        transform: scale(1.05) !important;
+        background-color: #FF6B6B;
+        color: white;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -434,12 +434,7 @@ def main():
                 display_disease_info(most_common_disease)
 
     with tab_camera:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>📷 Detect with Camera Capture</h3>
-            <p>Take a photo using your camera for instant disease analysis.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="feature-card"><h3>📷 Detect with Camera Capture</h3><p>Take a photo using your camera for instant disease analysis.</p></div>""", unsafe_allow_html=True)
 
         if not st.session_state.camera_activated:
             st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
@@ -462,12 +457,7 @@ def main():
                 process_and_display_results(image)
 
     with tab_upload:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>📤 Upload an Image</h3>
-            <p>Upload a photo of your orchid plant from your gallery for analysis.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="feature-card"><h3>📤 Upload an Image</h3><p>Upload a photo of your orchid plant from your gallery for analysis.</p></div>""", unsafe_allow_html=True)
 
         uploaded_file = st.file_uploader("Choose an orchid image", type=['jpg', 'jpeg', 'png'])
 
