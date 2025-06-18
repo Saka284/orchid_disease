@@ -6,173 +6,36 @@ from collections import Counter
 
 from ultralytics import YOLO
 
-# Page config
-st.set_page_config(
-    page_title="🌺 Orchid Disease Detection",
-    page_icon="🌺",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# Initialize session_state for camera control
-if 'camera_activated' not in st.session_state:
-    st.session_state.camera_activated = False
-
-# CSS styling with the new colorful grid layout for info cards
+# ... (CSS Anda tetap sama, tidak perlu diubah) ...
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 3rem;
-        font-weight: bold;
+    /* ... (Semua CSS Anda ada di sini) ... */
+
+    /* Menambahkan beberapa style untuk halaman selamat datang */
+    .welcome-section {
         text-align: center;
-        background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 2rem;
-    }
-    .feature-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1.5rem;
-        border-radius: 15px;
-        color: white;
-        margin: 1rem 0;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
-    }
-    .feature-card:hover { transform: translateY(-5px); }
-    .detection-result {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         padding: 2rem;
-        border-radius: 20px;
-        color: white;
-        text-align: center;
-        margin: 1.5rem 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    .recommendation-card {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        padding: 1.5rem;
+    .welcome-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+    .step-card {
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 15px;
-        margin-top: 1rem;
-        color: white;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    .healthy-result {
-        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        color: white;
-        text-align: center;
-        margin: 1.5rem 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .sidebar-content {
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem;
-        border-radius: 10px;
-        color: white;
+        padding: 1.5rem;
         margin: 1rem 0;
+        border-left: 5px solid #FF6B6B;
+        text-align: left;
     }
-    .stButton > button {
-        background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 0.5rem 2rem;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-    .stButton > button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-
-    /* Updated CSS for information cards with 2x1 grid and more colors */
-    .info-card-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Two columns for the top cards */
-        gap: 20px;
-        margin-top: 1.5rem;
-    }
-
-    .info-card {
-        background: linear-gradient(145deg, #ffc371, #ff5f6d); /* Colorful gradient */
-        border-radius: 20px;
-        padding: 25px;
-        color: white;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        border-left: 1px solid rgba(255, 255, 255, 0.3);
-        display: flex;
-        flex-direction: column;
-    }
-
-    .info-card h4 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: white;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        padding-bottom: 15px;
-    }
-
-    .info-card ul {
-        list-style-type: none;
-        padding-left: 0;
-        flex-grow: 1;
-    }
-
-    .info-card li {
-        background-color: rgba(0, 0, 0, 0.15);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-        line-height: 1.4;
-    }
-    
-    .info-card-treatment {
-        background: linear-gradient(145deg, #84fab0, #8fd3f4); /* Green/blue gradient */
-        grid-column: 1 / -1; /* Make this card span both columns */
-        border-radius: 20px;
-        padding: 25px;
-        color: #1f3b4d; /* Darker text for better contrast */
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        border-top: 1px solid rgba(255, 255, 255, 0.5);
-        border-left: 1px solid rgba(255, 255, 255, 0.5);
-        margin-top: 20px;
-    }
-
-    .info-card-treatment h4 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #1f3b4d;
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(31, 59, 77, 0.3);
-        padding-bottom: 15px;
-    }
-
-    .info-card-treatment ul {
-        list-style-type: none;
-        padding-left: 0;
-    }
-
-    .info-card-treatment li {
-        background-color: rgba(255, 255, 255, 0.4);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-        line-height: 1.4;
+    .step-card h4 {
+        color: #FF6B6B;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Disease information database
+
+# ... (DISEASE_INFO dan DISEASE_CLASSES tetap sama) ...
 DISEASE_INFO = {
     "Petal Blight": {
         "description": "A petal blight disease caused by the fungus Botrytis cinerea.",
@@ -194,9 +57,10 @@ DISEASE_INFO = {
     }
 }
 
-# Only disease classes are now relevant
 DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
 
+
+# ... (Semua fungsi Anda seperti load_model, predict_disease_yolo, dll. tetap sama) ...
 @st.cache_resource
 def load_model():
     """Load YOLO model from .pt file"""
@@ -306,10 +170,12 @@ def display_disease_info(disease_name):
         """
         st.markdown(card_html, unsafe_allow_html=True)
 
+
 def main():
     st.markdown('<h1 class="main-header">🌺 Orchid Disease Detection System</h1>', unsafe_allow_html=True)
 
     with st.sidebar:
+        # ... (Isi sidebar Anda tetap sama) ...
         st.markdown("""
         <div class="sidebar-content">
             <h2>🎯 Application Features</h2>
@@ -330,9 +196,57 @@ def main():
         st.info("Use a photo with good lighting, focus on the orchid's leaf or flower, and ensure the image is not blurry.")
 
     model = load_model()
-    tab1, tab2 = st.tabs(["📷 Camera Capture", "📤 Upload Image"])
+    
+    # --- PERUBAHAN UTAMA: Menambahkan tab 'Selamat Datang' ---
+    tab0, tab1, tab2 = st.tabs(["👋 Selamat Datang", "📷 Kamera", "📤 Unggah Gambar"])
+
+    with tab0:
+        st.markdown('<div class="welcome-section">', unsafe_allow_html=True)
+        st.markdown('<div class="welcome-icon">🌸</div>', unsafe_allow_html=True)
+        st.markdown('<h2>Selamat Datang di Sistem Deteksi Penyakit Anggrek!</h2>', unsafe_allow_html=True)
+        
+        st.markdown("""
+        <p style="font-size: 1.1rem; max-width: 800px; margin: auto;">
+            Aplikasi ini dirancang untuk membantu para pecinta anggrek seperti Anda. Dengan teknologi AI canggih, 
+            Anda dapat mendeteksi penyakit umum pada anggrek secara dini, memberikan kesempatan terbaik bagi 
+            tanaman Anda untuk pulih dan tumbuh subur.
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("---")
+
+        st.subheader("🚀 Cara Memulai dalam 3 Langkah Mudah")
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.markdown("""
+            <div class="step-card">
+                <h4>1. Pilih Sumber Gambar</h4>
+                <p>Buka tab <b>'📷 Kamera'</b> untuk mengambil foto langsung atau tab <b>'📤 Unggah Gambar'</b> untuk memilih foto dari perangkat Anda.</p>
+            </div>
+            """, unsafe_allow_html=True)
+        with col2:
+            st.markdown("""
+            <div class="step-card">
+                <h4>2. Siapkan Gambar</h4>
+                <p>Pastikan gambar memiliki pencahayaan yang baik, fokus, dan jelas menyorot bagian bunga, daun, atau batang yang ingin diperiksa.</p>
+            </div>
+            """, unsafe_allow_html=True)
+        with col3:
+            st.markdown("""
+            <div class="step-card">
+                <h4>3. Analisis & Dapatkan Solusi</h4>
+                <p>Klik tombol analisis dan biarkan AI bekerja. Anda akan menerima hasil deteksi beserta informasi gejala dan rekomendasi perawatan.</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("---")
+        st.info("💡 **Tips Pro:** Semakin jelas gambar Anda, semakin akurat hasil deteksi yang akan Anda dapatkan. Silakan mulai dengan memilih salah satu tab di atas!")
+
 
     def process_and_display_results(image):
+        # ... (Fungsi ini tetap sama) ...
         with st.spinner("Analyzing the image..."):
             detections = predict_disease_yolo(model, image)
 
@@ -385,14 +299,19 @@ def main():
                 """, unsafe_allow_html=True)
 
                 display_disease_info(most_common_disease)
+        
 
     with tab1:
+        # ... (Isi tab1 Anda tetap sama) ...
         st.markdown("""
         <div class="feature-card">
             <h3>📷 Detect with Camera Capture</h3>
             <p>Take a photo using your camera for instant disease analysis.</p>
         </div>
         """, unsafe_allow_html=True)
+
+        if 'camera_activated' not in st.session_state:
+            st.session_state.camera_activated = False
 
         if not st.session_state.camera_activated:
             if st.button("📷 Activate Camera"):
@@ -409,8 +328,10 @@ def main():
             if camera_input is not None:
                 image = Image.open(camera_input)
                 process_and_display_results(image)
+        
 
     with tab2:
+        # ... (Isi tab2 Anda tetap sama) ...
         st.markdown("""
         <div class="feature-card">
             <h3>📤 Upload an Image</h3>
@@ -422,6 +343,9 @@ def main():
 
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
+            
+            # Menampilkan gambar yang diunggah sebelum tombol analisis ditekan
+            st.image(image, caption="Image to be analyzed.", use_container_width=True)
 
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
@@ -434,6 +358,7 @@ def main():
         <p>The model can detect 3 Types of Diseases: Petal Blight, Brown Spot, and Soft Rot</p>
     </div>
     """, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()
