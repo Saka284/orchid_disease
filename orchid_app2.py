@@ -74,21 +74,37 @@ st.markdown("""
         margin: 1rem 0;
     }
     .stButton > button {
-        background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
-        color: white;
         border: none;
-        border-radius: 25px;
-        padding: 0.5rem 2rem;
+        border-radius: 10px;
+        padding: 0.75rem 2rem; /* Sedikit lebih besar untuk tampilan modern */
         font-weight: bold;
         transition: all 0.3s ease;
         width: 100%;
     }
-    .stButton > button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
+div[data-testid="stButton-activate_camera"] > button,
+div[data-testid="stButton-upload_analyze"] > button {
+    background: linear-gradient(90deg, #2980B9, #5DADE2); /* Gradien biru yang elegan */
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
 
-    /* Updated CSS for information cards with 2x1 grid and more colors */
+    div[data-testid="stButton-activate_camera"] > button:hover,
+    div[data-testid="stButton-upload_analyze"] > button:hover {
+        transform: translateY(-2px); /* Efek 'mengangkat' saat di-hover */
+        box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
+        filter: brightness(1.1); /* Sedikit lebih cerah */
+    }
+div[data-testid="stButton-deactivate_camera"] > button {
+    background-color: transparent;
+    color: #AAB7B8; /* Warna teks abu-abu terang */
+    border: 2px solid #34495E; /* Border warna gelap */
+}
+
+div[data-testid="stButton-deactivate_camera"] > button:hover {
+    background-color: #34495E; /* Latar belakang terisi saat di-hover */
+    color: #ECF0F1; /* Teks menjadi lebih terang */
+    border-color: #5DADE2; /* Border berubah warna menjadi warna aksen */
+}
     .info-card-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -401,14 +417,14 @@ def main():
         """, unsafe_allow_html=True)
 
         if not st.session_state.camera_activated:
-            if st.button("📷 Activate Camera"):
+            if st.button("📷 Activate Camera", key="activate_camera"):
                 st.session_state.camera_activated = True
                 st.rerun()
         else:
             st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
             camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
 
-            if st.button("❌ Deactivate Camera"):
+            if st.button("❌ Deactivate Camera", key="deactivate_camera"):
                 st.session_state.camera_activated = False
                 st.rerun()
 
