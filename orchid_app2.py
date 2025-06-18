@@ -18,10 +18,9 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# CSS styling
+# CSS styling with the new colorful grid layout for info cards
 st.markdown("""
 <style>
-    /* KODE ASLI ANDA, TIDAK DIUBAH */
     .main-header {
         font-size: 3rem;
         font-weight: bold;
@@ -74,88 +73,104 @@ st.markdown("""
         color: white;
         margin: 1rem 0;
     }
-    
-    /* MENGHAPUS SEMUA CSS TOMBOL LAMA DAN MENGGANTINYA DENGAN YANG BARU */
-    .info-card-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        margin-top: 1.5rem;
-    }
-    .info-card, .info-card-treatment {
-        background-color: #2C3E50;
-        color: #ECF0F1;
-        padding: 25px;
-        border-radius: 15px;
-        border: 1px solid #34495E;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        display: flex;
-        flex-direction: column;
-    }
-    .info-card-treatment {
-        grid-column: 1 / -1;
-        margin-top: 20px;
-        background-color: #233140; 
-    }
-    .info-card h4, .info-card-treatment h4 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        color: #5DADE2; 
-        border-bottom: 1px solid #34495E;
-        text-shadow: none;
-    }
-    .info-card ul, .info-card-treatment ul {
-        list-style-type: none;
-        padding-left: 0;
-        flex-grow: 1;
-    }
-    .info-card li, .info-card-treatment li {
-        background-color: rgba(52, 73, 94, 0.5); 
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-        line-height: 1.4;
-        border-left: 3px solid #5DADE2;
-    }
-
-    /* === CSS TOMBOL FINAL YANG PASTI BERHASIL === */
-    .tombol-merah .stButton,
-    .tombol-outline .stButton {
-        width: 100%;
-    }
-    .tombol-merah button,
-    .tombol-outline button {
-        width: 100%;
-        font-weight: bold;
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        transition: all 0.2s ease-in-out;
-    }
-    /* Tombol Aksi Utama (MERAH) */
-    .tombol-merah button {
-        background-color: #FF6B6B; /* Warna merah persis dari header Anda */
-        color: white;
+    .stButton > button {
         border: none;
-    }
-    .tombol-merah button:hover {
-        background-color: #E55353; /* Warna merah lebih gelap saat disentuh */
-        transform: translateY(-2px);
-    }
-    /* Tombol Aksi Sekunder (Outline) */
-    .tombol-outline button {
-        background-color: transparent;
-        color: #F5B7B1; /* Warna teks merah muda */
-        border: 2px solid #FF6B6B; /* Outline warna merah */
-    }
-    .tombol-outline button:hover {
-        background-color: #FF6B6B;
-        color: white;
-    }
+        border-radius: 10px;
+        padding: 0.75rem 2rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
+        cursor: pointer; 
+}
+div[data-testid="stButton-activate_camera"] > button,
+div[data-testid="stButton-upload_analyze"] > button {
+    /* Gradien merah yang cerah dan modern */
+    background: linear-gradient(90deg, #FF6B6B, #D9534F); 
+    color: white;
+    /* Bayangan dengan warna merah untuk efek 'glow' */
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.25);
+}
 
+div[data-testid="stButton-activate_camera"] > button:hover,
+div[data-testid="stButton-upload_analyze"] > button:hover {
+    transform: translateY(-2px);
+    /* Bayangan 'glow' yang lebih kuat saat di-hover */
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    filter: brightness(1.1);
+}
+
+/* Gaya untuk TOMBOL SEKUNDER (Deactivate) dengan outline MERAH */
+div[data-testid="stButton-deactivate_camera"] > button {
+    background-color: transparent;
+    /* Warna teks merah yang lebih lembut */
+    color: #F5B7B1; 
+    /* Border dengan warna merah yang lebih gelap */
+    border: 2px solid #D9534F; 
+}
+
+div[data-testid="stButton-deactivate_camera"] > button:hover {
+    /* Latar belakang terisi dengan warna merah gelap saat di-hover */
+    background-color: #D9534F;
+    color: white; /* Teks menjadi putih solid */
+    border-color: #FF6B6B; /* Border menjadi lebih cerah */
+}
+    .info-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 1.5rem;
+}
+
+.info-card, .info-card-treatment {
+    /* Latar belakang abu-abu gelap, bukan hitam pekat */
+    background-color: #2C3E50; /* Warna dasar: abu-abu kebiruan gelap */
+    color: #ECF0F1; /* Warna teks: abu-abu sangat terang */
+    padding: 25px;
+    border-radius: 15px;
+    /* Border halus untuk memberikan sedikit definisi */
+    border: 1px solid #34495E;
+    /* Bayangan halus untuk efek 'mengambang' */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.info-card-treatment {
+    grid-column: 1 / -1; /* Tetap span dua kolom */
+    margin-top: 20px;
+    /* Sedikit berbeda untuk membedakannya */
+    background-color: #233140; 
+}
+
+.info-card h4, .info-card-treatment h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    /* Warna aksen biru yang tidak mencolok */
+    color: #5DADE2; 
+    /* Garis bawah dengan warna yang lebih gelap */
+    border-bottom: 1px solid #34495E;
+    text-shadow: none; /* Menghilangkan text-shadow untuk tampilan lebih bersih */
+}
+
+.info-card ul, .info-card-treatment ul {
+    list-style-type: none;
+    padding-left: 0;
+    flex-grow: 1;
+}
+
+.info-card li, .info-card-treatment li {
+    /* Latar belakang list item yang sedikit lebih terang dari kartu */
+    background-color: rgba(52, 73, 94, 0.5); 
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    border-left: 3px solid #5DADE2; /* Aksen di sisi kiri list item */
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -275,6 +290,7 @@ def display_disease_info(disease_name):
         prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
         treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
 
+        # Renders the 2x1 top grid and the full-width bottom card
         card_html = f"""
         <div class="info-card-grid">
             <div class="info-card">
@@ -318,11 +334,13 @@ def main():
 
     model = load_model()
     
+    # --- PERUBAHAN: Menambahkan tab Beranda dan mengubah nama variabel tab ---
     tab_beranda, tab_camera, tab_upload = st.tabs(["🏠 Beranda", "📷 Camera Capture", "📤 Upload Image"])
 
+    # --- KONTEN TAB BERANDA (LANDING PAGE) ---
     with tab_beranda:
         st.markdown("""
-        <div class="feature-card">
+        <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
             <h3>Selamat Datang di Asisten Kesehatan Anggrek Anda!</h3>
             <p>Aplikasi ini menggunakan Kecerdasan Buatan (AI) untuk membantu Anda mengidentifikasi penyakit umum pada anggrek secara cepat dan akurat. Deteksi dini adalah kunci untuk menyelamatkan tanaman kesayangan Anda.</p>
         </div>
@@ -408,22 +426,16 @@ def main():
         """, unsafe_allow_html=True)
 
         if not st.session_state.camera_activated:
-            # --- TOMBOL PRIMER DENGAN WRAPPER ---
-            st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("📷 Activate Camera", key="activate_camera"):
                 st.session_state.camera_activated = True
                 st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
             camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
 
-            # --- TOMBOL SEKUNDER DENGAN WRAPPER ---
-            st.markdown('<div class="tombol-outline">', unsafe_allow_html=True)
             if st.button("❌ Deactivate Camera", key="deactivate_camera"):
                 st.session_state.camera_activated = False
                 st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
 
             if camera_input is not None:
                 image = Image.open(camera_input)
@@ -441,13 +453,9 @@ def main():
 
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            st.image(image, caption="Image to be analyzed", use_container_width=True)
 
-            # --- TOMBOL PRIMER DENGAN WRAPPER ---
-            st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
-            st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("""
