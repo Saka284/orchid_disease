@@ -579,7 +579,7 @@ def main():
         uploaded_file = st.file_uploader("Choose an orchid image", type=['jpg', 'jpeg', 'png'])
 
         if uploaded_file is not None:
-            # image = Image.open(uploaded_file)
+            image = Image.open(uploaded_file)
             # st.image(image, caption="Image to be analyzed", use_container_width=True)
             
             st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
