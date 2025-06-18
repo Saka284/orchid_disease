@@ -18,10 +18,10 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# --- CSS FINAL - GAYA ASLI ANDA DIKEMBALIKAN + PERBAIKAN TOMBOL ---
+# --- CSS FINAL YANG SUDAH DIBERSIHKAN ---
 st.markdown("""
 <style>
-    /* GAYA ASLI ANDA - TIDAK SAYA UBAH */
+    /* BAGIAN 1: SEMUA GAYA ASLI ANDA (TIDAK DIUBAH) */
     .main-header {
         font-size: 3rem;
         font-weight: bold;
@@ -90,152 +90,64 @@ st.markdown("""
         flex-direction: column;
     }
     .info-card h4 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: white;
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        padding-bottom: 15px;
+        font-size: 1.5rem; font-weight: bold; color: white; text-align: center;
+        margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.3); padding-bottom: 15px;
     }
-    .info-card ul {
-        list-style-type: none;
-        padding-left: 0;
-        flex-grow: 1;
-    }
+    .info-card ul { list-style-type: none; padding-left: 0; flex-grow: 1; }
     .info-card li {
-        background-color: rgba(0, 0, 0, 0.15);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-        line-height: 1.4;
+        background-color: rgba(0, 0, 0, 0.15); padding: 12px;
+        border-radius: 10px; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.4;
     }
-    .info-card, .info-card-treatment {
-    /* Latar belakang abu-abu gelap, bukan hitam pekat */
-    background-color: #2C3E50; /* Warna dasar: abu-abu kebiruan gelap */
-    color: #ECF0F1; /* Warna teks: abu-abu sangat terang */
-    padding: 25px;
-    border-radius: 15px;
-    /* Border halus untuk memberikan sedikit definisi */
-    border: 1px solid #34495E;
-    /* Bayangan halus untuk efek 'mengambang' */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-}
+    .info-card-treatment {
+        background: linear-gradient(145deg, #84fab0, #8fd3f4);
+        grid-column: 1 / -1; border-radius: 20px; padding: 25px; color: #1f3b4d;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25); margin-top: 20px;
+    }
+    .info-card-treatment h4 {
+        color: #1f3b4d; border-bottom: 1px solid rgba(31, 59, 77, 0.3);
+    }
+    .info-card-treatment li { background-color: rgba(255, 255, 255, 0.4); }
 
-.info-card-treatment {
-    grid-column: 1 / -1; /* Tetap span dua kolom */
-    margin-top: 20px;
-    /* Sedikit berbeda untuk membedakannya */
-    background-color: #233140; 
-}
+    /* BAGIAN 2: CSS BARU UNTUK UI BERANDA */
+    .home-card {
+        background-color: #2C3E50; padding: 2rem; border-radius: 15px;
+        border: 1px solid #34495E; text-align: center; height: 100%; color: #ECF0F1;
+    }
+    .home-card h3 { color: #5DADE2; margin-bottom: 1rem; }
+    .dos-donts-list { list-style-type: none; padding-left: 0; color: #ECF0F1; text-align: left; }
+    .dos-donts-list li { margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 7px; }
+    .dos { background-color: rgba(46, 204, 113, 0.1); border-left: 4px solid #2ECC71; }
+    .donts { background-color: rgba(231, 76, 60, 0.1); border-left: 4px solid #E74C3C; }
 
-.info-card h4, .info-card-treatment h4 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    /* Warna aksen biru yang tidak mencolok */
-    color: #5DADE2; 
-    /* Garis bawah dengan warna yang lebih gelap */
-    border-bottom: 1px solid #34495E;
-    text-shadow: none; /* Menghilangkan text-shadow untuk tampilan lebih bersih */
-}
-
-.info-card ul, .info-card-treatment ul {
-    list-style-type: none;
-    padding-left: 0;
-    flex-grow: 1;
-}
-
-.info-card li, .info-card-treatment li {
-    /* Latar belakang list item yang sedikit lebih terang dari kartu */
-    background-color: rgba(52, 73, 94, 0.5); 
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    border-left: 3px solid #5DADE2; /* Aksen di sisi kiri list item */
-}
-
-    /* === BAGIAN 1: GAYA TOMBOL ASLI ANDA DIKEMBALIKAN SEBAGAI DEFAULT === */
+    /* BAGIAN 3: GAYA TOMBOL ASLI ANDA SEBAGAI DEFAULT */
     .stButton > button {
         background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 0.5rem 2rem;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        width: 100%;
+        color: white; border: none; border-radius: 25px; padding: 0.5rem 2rem;
+        font-weight: bold; transition: all 0.3s ease; width: 100%;
     }
     .stButton > button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    
-    /* === BAGIAN 2: CSS BARU UNTUK UI BERANDA === */
-    .home-card {
-        background-color: #2C3E50;
-        padding: 2rem;
-        border-radius: 15px;
-        border: 1px solid #34495E;
-        text-align: center;
-        height: 100%;
-        color: #ECF0F1;
-    }
-    .home-card h3 {
-        color: #5DADE2;
-        margin-bottom: 1rem;
-    }
-    .dos-donts-list {
-        list-style-type: none;
-        padding-left: 0;
-        color: #ECF0F1;
-        text-align: left;
-    }
-    .dos-donts-list li {
-        margin-bottom: 0.5rem;
-        padding: 0.5rem;
-        border-radius: 7px;
-    }
-    .dos {
-        background-color: rgba(46, 204, 113, 0.1);
-        border-left: 4px solid #2ECC71;
-    }
-    .donts {
-        background-color: rgba(231, 76, 60, 0.1);
-        border-left: 4px solid #E74C3C;
+        transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    /* === BAGIAN 3: CSS UNTUK MENIMPA (OVERRIDE) GAYA TOMBOL TERTENTU === */
+    /* BAGIAN 4: CSS KHUSUS UNTUK MENIMPA GAYA TOMBOL TERTENTU */
     .tombol-merah button {
-        background: #FF6B6B !important; /* !important untuk memastikan override */
-        color: white !important;
+        background: #FF6B6B !important;
         border-radius: 10px !important;
-        padding: 0.75rem 1rem !important;
     }
     .tombol-merah button:hover {
         background: #E55353 !important;
         transform: translateY(-2px) !important;
-        box-shadow: none !important;
     }
     .tombol-outline button {
         background: transparent !important;
-        color: #F5B7B1 !important;
+        color: #FF6B6B !important;
         border: 2px solid #FF6B6B !important;
         border-radius: 10px !important;
-        padding: 0.75rem 1rem !important;
     }
     .tombol-outline button:hover {
         background: #FF6B6B !important;
         color: white !important;
-        transform: none !important;
-        box-shadow: none !important;
+        transform: scale(1.05) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -400,7 +312,6 @@ def main():
     
     tab_beranda, tab_camera, tab_upload = st.tabs(["🏠 Beranda", "📷 Camera Capture", "📤 Upload Image"])
 
-    # --- ISI TAB BERANDA BARU ---
     with tab_beranda:
         st.subheader("Membantu Anda Merawat Anggrek dengan Kecerdasan Buatan")
         st.markdown(
@@ -415,32 +326,17 @@ def main():
         col1, col2, col3 = st.columns(3)
         with col1:
             st.markdown(
-                """
-                <div class="home-card">
-                    <h3>Petal Blight</h3>
-                    <p>Bercak coklat atau kehitaman pada kelopak bunga yang membuatnya cepat layu.</p>
-                </div>
-                """,
+                """<div class="home-card"><h3>Petal Blight</h3><p>Bercak coklat atau kehitaman pada kelopak bunga yang membuatnya cepat layu.</p></div>""",
                 unsafe_allow_html=True
             )
         with col2:
             st.markdown(
-                """
-                <div class="home-card">
-                    <h3>Brown Spot</h3>
-                    <p>Bercak coklat pada daun yang bisa menyebar dan menyebabkan pembusukan jaringan.</p>
-                </div>
-                """,
+                """<div class="home-card"><h3>Brown Spot</h3><p>Bercak coklat pada daun yang bisa menyebar dan menyebabkan pembusukan jaringan.</p></div>""",
                 unsafe_allow_html=True
             )
         with col3:
             st.markdown(
-                """
-                <div class="home-card">
-                    <h3>Soft Rot</h3>
-                    <p>Pembusukan lunak dan berbau pada daun atau batang, seringkali akibat bakteri.</p>
-                </div>
-                """,
+                """<div class="home-card"><h3>Soft Rot</h3><p>Pembusukan lunak dan berbau pada daun atau batang, seringkali akibat bakteri.</p></div>""",
                 unsafe_allow_html=True
             )
 
@@ -537,7 +433,6 @@ def main():
 
                 display_disease_info(most_common_disease)
 
-    # --- KONTEN TAB LAIN DENGAN PERUBAHAN MINIMAL HANYA PADA TOMBOL ---
     with tab_camera:
         st.markdown("""
         <div class="feature-card">
@@ -547,7 +442,6 @@ def main():
         """, unsafe_allow_html=True)
 
         if not st.session_state.camera_activated:
-            # PERUBAHAN HANYA DI SINI
             st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("📷 Activate Camera", key="activate_camera"):
                 st.session_state.camera_activated = True
@@ -557,7 +451,6 @@ def main():
             st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
             camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
 
-            # PERUBAHAN HANYA DI SINI
             st.markdown('<div class="tombol-outline">', unsafe_allow_html=True)
             if st.button("❌ Deactivate Camera", key="deactivate_camera"):
                 st.session_state.camera_activated = False
