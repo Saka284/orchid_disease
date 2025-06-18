@@ -111,36 +111,56 @@ st.markdown("""
         font-size: 0.95rem;
         line-height: 1.4;
     }
-    .info-card-treatment {
-        background: linear-gradient(145deg, #84fab0, #8fd3f4);
-        grid-column: 1 / -1;
-        border-radius: 20px;
-        padding: 25px;
-        color: #1f3b4d;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-        margin-top: 20px;
-    }
-    .info-card-treatment h4 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #1f3b4d;
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(31, 59, 77, 0.3);
-        padding-bottom: 15px;
-    }
-    .info-card-treatment ul {
-        list-style-type: none;
-        padding-left: 0;
-    }
-    .info-card-treatment li {
-        background-color: rgba(255, 255, 255, 0.4);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-        line-height: 1.4;
-    }
+    .info-card, .info-card-treatment {
+    /* Latar belakang abu-abu gelap, bukan hitam pekat */
+    background-color: #2C3E50; /* Warna dasar: abu-abu kebiruan gelap */
+    color: #ECF0F1; /* Warna teks: abu-abu sangat terang */
+    padding: 25px;
+    border-radius: 15px;
+    /* Border halus untuk memberikan sedikit definisi */
+    border: 1px solid #34495E;
+    /* Bayangan halus untuk efek 'mengambang' */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.info-card-treatment {
+    grid-column: 1 / -1; /* Tetap span dua kolom */
+    margin-top: 20px;
+    /* Sedikit berbeda untuk membedakannya */
+    background-color: #233140; 
+}
+
+.info-card h4, .info-card-treatment h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    /* Warna aksen biru yang tidak mencolok */
+    color: #5DADE2; 
+    /* Garis bawah dengan warna yang lebih gelap */
+    border-bottom: 1px solid #34495E;
+    text-shadow: none; /* Menghilangkan text-shadow untuk tampilan lebih bersih */
+}
+
+.info-card ul, .info-card-treatment ul {
+    list-style-type: none;
+    padding-left: 0;
+    flex-grow: 1;
+}
+
+.info-card li, .info-card-treatment li {
+    /* Latar belakang list item yang sedikit lebih terang dari kartu */
+    background-color: rgba(52, 73, 94, 0.5); 
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    border-left: 3px solid #5DADE2; /* Aksen di sisi kiri list item */
+}
 
     /* === BAGIAN 1: GAYA TOMBOL ASLI ANDA DIKEMBALIKAN SEBAGAI DEFAULT === */
     .stButton > button {
@@ -559,10 +579,9 @@ def main():
         uploaded_file = st.file_uploader("Choose an orchid image", type=['jpg', 'jpeg', 'png'])
 
         if uploaded_file is not None:
-            image = Image.open(uploaded_file)
-            st.image(image, caption="Image to be analyzed", use_container_width=True)
+            # image = Image.open(uploaded_file)
+            # st.image(image, caption="Image to be analyzed", use_container_width=True)
             
-            # PERUBAHAN HANYA DI SINI
             st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
