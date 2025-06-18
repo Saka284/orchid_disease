@@ -580,7 +580,6 @@ def main():
 
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            st.image(image, caption="Image to be analyzed", use_container_width=True) # <-- PENYEBABNYA
             
             st.markdown('<div class="tombol-merah">', unsafe_allow_html=True)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
