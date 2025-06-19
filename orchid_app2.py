@@ -579,7 +579,7 @@ def main():
             <h2 style="color: #5dade2; margin-bottom: 1rem;">🤖 Asisten Perawatan Anggrek AI</h2>
             <p style="font-size: 1.1rem; color: #b3b3b3; max-width: 800px; margin: 0 auto;">
                 Selamat datang di masa depan perawatan anggrek! Sistem AI canggih kami membantu Anda mengidentifikasi penyakit lebih awal 
-                dan memberikan rekomendasi ahli untuk menjaga anggrek Anda tetap sehat dan subur.
+                dan memberikan rekomendasi terbaik untuk menjaga anggrek Anda tetap sehat dan subur.
             </p>
         </div>
         """, unsafe_allow_html=True)
