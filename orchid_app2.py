@@ -431,9 +431,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==============================================================================
-# PERBARUAN DATABASE PENYAKIT BERDASARKAN JURNAL
-# ==============================================================================
 DISEASE_INFO = {
     "Petal Blight": {
         "description": "Busuk bunga (petal blight) disebabkan oleh jamur seperti Botrytis cinerea (jamur abu-abu) atau Phytophthora. Penyakit ini menyerang kuncup dan bunga, menyebabkan kerugian signifikan.",
