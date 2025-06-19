@@ -431,25 +431,72 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Disease information database
+# ==============================================================================
+# PERBARUAN DATABASE PENYAKIT BERDASARKAN JURNAL
+# ==============================================================================
 DISEASE_INFO = {
     "Petal Blight": {
-        "description": "A petal blight disease caused by the fungus Botrytis cinerea.",
-        "symptoms": ["Brown spots on flower petals", "Petals become soft and slimy", "Premature flower drop"],
-        "prevention": ["Maintain good air circulation", "Avoid excess humidity", "Remove faded flowers promptly"],
-        "treatment": ["Cut off all infected parts", "Apply a suitable fungicide", "Reduce watering and humidity"]
+        "description": "Busuk bunga (petal blight) disebabkan oleh jamur seperti Botrytis cinerea (jamur abu-abu) atau Phytophthora. Penyakit ini menyerang kuncup dan bunga, menyebabkan kerugian signifikan.",
+        "symptoms": [
+            "Bercak basah berwarna coklat muda pada kelopak bunga.",
+            "Pada infeksi Botrytis, bisa muncul spora abu-abu yang seperti debu.",
+            "Infeksi Phytophthora tidak menghasilkan spora abu-abu namun tetap menyebabkan busuk basah.",
+            "Kuncup bunga bisa membusuk dan gagal mekar."
+        ],
+        "prevention": [
+            "Buang bunga yang sudah layu atau terinfeksi secepatnya.",
+            "Tingkatkan sirkulasi udara di sekitar bunga untuk mengurangi kelembaban.",
+            "Hindari menyemprotkan air langsung ke bunga.",
+            "Jaga kebersihan area tanam dari sisa-sisa tanaman."
+        ],
+        "treatment": [
+            "Gunakan fungisida yang efektif untuk Botrytis atau Phytophthora (contoh: Captan, Aliette, Subdue).",
+            "Lakukan penyemprotan preventif jika kondisi lingkungan sangat lembab.",
+            "Potong dan musnahkan semua bagian yang terinfeksi untuk menghentikan penyebaran.",
+            "Pertimbangkan agen kontrol hayati (mikroorganisme antagonis) jika tersedia."
+        ]
     },
     "Brown Spot": {
-        "description": "A brown rot caused by the fungus Monilinia fructicola.",
-        "symptoms": ["Brown spots on the pseudobulb", "Tissue becomes soft and rotten", "Appearance of brown-colored spores"],
-        "prevention": ["Keep the area clean", "Avoid injuring the pseudobulb", "Ensure good drainage"],
-        "treatment": ["Cut infected tissue down to healthy areas", "Apply fungicide paste to the wound", "Isolate the plant"]
+        "description": "Busuk Coklat (Brown Spot / Brown Rot) adalah penyakit merusak yang disebabkan oleh jamur (seperti Phytophthora) atau bakteri (seperti Erwinia), menyerang daun dan pseudobulb.",
+        "symptoms": [
+            "Bercak basah (water-logged) pada daun yang awalnya kuning-coklat.",
+            "Bercak dengan cepat membesar dan berubah menjadi coklat tua atau hitam.",
+            "Pada beberapa jenis anggrek, infeksi dimulai dari pangkal daun dan menyebar ke atas.",
+            "Dalam kasus parah, dapat menyebar ke akar dan menyebabkan busuk akar."
+        ],
+        "prevention": [
+            "Jaga sirkulasi udara yang baik untuk mengurangi kelembaban.",
+            "Hindari daun basah terlalu lama, jangan menyiram dari atas.",
+            "Pastikan media tanam memiliki drainase yang baik.",
+            "Selalu gunakan alat potong yang steril saat melakukan perawatan."
+        ],
+        "treatment": [
+            "Segera potong bagian tanaman yang terinfeksi hingga ke jaringan sehat dengan alat steril.",
+            "Oleskan fungisida/bakterisida (contoh: Physan 20, Captan, Aliette) pada luka potongan.",
+            "Untuk serangan jamur Phytophthora, fungisida sistemik seperti Aliette atau Subdue sangat efektif.",
+            "Isolasi tanaman yang sakit untuk mencegah penularan."
+        ]
     },
     "Soft Rot": {
-        "description": "A soft rot caused by the bacterium Erwinia carotovora.",
-        "symptoms": ["Plant tissue becomes mushy", "A foul, rotting smell", "The infected part changes color"],
-        "prevention": ["Avoid overwatering", "Keep tools and medium clean", "Ensure good air circulation"],
-        "treatment": ["Cut off all infected parts", "Apply a bactericide like streptomycin", "Reduce humidity"]
+        "description": "Busuk Lunak (Soft Rot) adalah penyakit bakteri yang sangat berbahaya dan cepat menyebar, disebabkan oleh Pectobacterium atau Dickeya. Penyakit ini seringkali fatal, terutama pada Phalaenopsis.",
+        "symptoms": [
+            "Daun menjadi bening, basah, dan lembek seperti agar-agar.",
+            "Mengeluarkan bau busuk yang sangat khas dan tidak sedap.",
+            "Seringkali dimulai dengan bintik kecil yang basah dan dikelilingi lingkaran kuning (halo).",
+            "Penyebaran sangat cepat, dapat menghancurkan seluruh tanaman dalam hitungan hari."
+        ],
+        "prevention": [
+            "Jaga agar daun selalu kering. Siram hanya pada bagian media tanam.",
+            "Tingkatkan sirkulasi udara secara maksimal di sekitar tanaman.",
+            "Hindari luka mekanis pada daun dan akar yang bisa menjadi pintu masuk bakteri.",
+            "Periksa tanaman secara rutin, terutama saat cuaca hangat dan lembab."
+        ],
+        "treatment": [
+            "Ini adalah kondisi darurat! Segera potong seluruh bagian yang terinfeksi sampai ke jaringan yang sehat.",
+            "Gunakan pisau yang disterilkan (dengan api atau alkohol) untuk SETIAP potongan.",
+            "Oleskan bubuk bakterisida/fungisida berbasis tembaga (Copper) atau antibiotik pada luka.",
+            "Hentikan penyiraman sementara dan isolasi tanaman dari yang lain."
+        ]
     }
 }
 
@@ -609,9 +656,9 @@ def main():
         """, unsafe_allow_html=True)
         st.markdown("### 🦠 Detectable Diseases:")
         diseases = [
-            ("🌸 Petal Blight", "Fungal infection affecting flower petals"),
-            ("🍃 Brown Spot", "Pseudobulb rotting disease"),
-            ("🌿 Soft Rot", "Bacterial tissue deterioration")
+            ("🌸 Petal Blight", "Busuk pada bunga akibat jamur."),
+            ("🍃 Brown Spot", "Busuk coklat pada daun & pseudobulb."),
+            ("🌿 Soft Rot", "Busuk lunak bakteri yang fatal.")
         ]
         for disease, desc in diseases:
             st.markdown(f"**{disease}**")
@@ -639,11 +686,12 @@ def main():
         """, unsafe_allow_html=True)
         st.markdown("---")
         st.markdown("## 🎯 Detectable Diseases")
+        # PERBARUAN DESKRIPSI SINGKAT DI HALAMAN UTAMA
         st.markdown("""
         <div class="disease-grid">
-            <div class="disease-card"><div class="disease-icon">🌸</div><h4>Petal Blight</h4><p>Fungal infection causing brown spots and premature flower drop. Often occurs in humid conditions.</p></div>
-            <div class="disease-card"><div class="disease-icon">🍃</div><h4>Brown Spot</h4><p>Pseudobulb rotting disease that causes soft, brown tissue deterioration and spore formation.</p></div>
-            <div class="disease-card"><div class="disease-icon">🌿</div><h4>Soft Rot</h4><p>Bacterial infection leading to mushy tissue, foul odor, and rapid plant deterioration.</p></div>
+            <div class="disease-card"><div class="disease-icon">🌸</div><h4>Petal Blight</h4><p>Menyerang kuncup dan bunga, menyebabkan bercak basah dan busuk yang sering disebabkan oleh jamur Botrytis.</p></div>
+            <div class="disease-card"><div class="disease-icon">🍃</div><h4>Brown Spot</h4><p>Menyebabkan bercak coklat kehitaman yang basah pada daun dan batang, disebabkan oleh jamur atau bakteri.</p></div>
+            <div class="disease-card"><div class="disease-icon">🌿</div><h4>Soft Rot</h4><p>Infeksi bakteri yang sangat cepat dan merusak, membuat jaringan tanaman menjadi lunak dan berbau busuk.</p></div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("---")
@@ -664,6 +712,7 @@ def main():
                 <h4 style="color: #e74c3c; text-align: center; margin-bottom: 1.5rem;">❌ Avoid This</h4>
                 <ul class="dos-donts-list">
                     <li class="donts">🌑 Taking photos in very dark or overly bright areas</li>
+                    <li class="donts">🏞️ Including too many plant parts in one image</li>
                     <li class="donts">💫 Using blurry or pixelated images</li>
                     <li class="donts">🌫️ Heavy shadows covering the affected areas</li>
                     <li class="donts">📐 Extreme angles that distort the plant features</li>
