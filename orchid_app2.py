@@ -42,7 +42,6 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
     }
     
-    /* Hide Streamlit branding - header removed for sidebar functionality */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     
@@ -358,17 +357,17 @@ st.markdown("""
 
     /* Custom Styling for Streamlit Camera Input */
     [data-testid="stCameraInput"] {
-        max-width: 720px; /* Batasi lebar maksimum di layar besar */
-        margin: 20px auto; /* Pusatkan komponen di tengah */
+        max-width: 720px;
+        margin: 20px auto;
         border: 2px dashed var(--border-color);
         border-radius: 20px;
         padding: 1rem;
     }
 
     [data-testid="stCameraInput"] video {
-        width: 100%; /* Buat video mengisi kontainer */
-        height: auto; /* Atur tinggi secara otomatis sesuai rasio aspek */
-        border-radius: 15px; /* Beri sedikit lengkungan pada video feed */
+        width: 100%;
+        height: auto;
+        border-radius: 15px;
     }
     
     .stProgress > div > div > div > div {
@@ -549,7 +548,8 @@ def display_disease_info(disease_name):
     """
     st.markdown(card_html, unsafe_allow_html=True)
 
-def process_and_display_results(image):
+# PERBAIKAN: Tambahkan 'model' sebagai parameter
+def process_and_display_results(image, model):
     """Process image, run prediction, and display results."""
     with st.spinner("🔍 Analyzing your orchid image..."):
         detections = predict_disease_yolo(model, image)
@@ -707,7 +707,8 @@ def main():
             )
             if camera_input is not None:
                 image = Image.open(camera_input)
-                process_and_display_results(image)
+                # PERBAIKAN: Tambahkan 'model' saat memanggil fungsi
+                process_and_display_results(image, model)
                 st.session_state.camera_activated = False
                 st.rerun()
             if st.button("❌ Deactivate Camera"):
@@ -729,7 +730,8 @@ def main():
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
-                process_and_display_results(image)
+                # PERBAIKAN: Tambahkan 'model' saat memanggil fungsi
+                process_and_display_results(image, model)
 
     st.markdown("---")
     st.markdown("""
