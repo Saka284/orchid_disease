@@ -23,7 +23,6 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* Root variables for consistent theming */
     :root {
         --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
@@ -38,18 +37,15 @@ st.markdown("""
         --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.4);
     }
     
-    /* Global Styles */
     .stApp {
         background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #2d2d2d 100%);
         font-family: 'Inter', sans-serif;
     }
     
-    /* Hide Streamlit branding */
+    /* Hide Streamlit branding - header removed for sidebar functionality */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
     
-    /* Main header with animated gradient */
     .main-header {
         font-size: clamp(2rem, 5vw, 3.5rem);
         font-weight: 700;
@@ -69,7 +65,6 @@ st.markdown("""
         50% { background-position: 100% 50%; }
     }
     
-    /* Enhanced feature cards */
     .feature-card {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -104,7 +99,6 @@ st.markdown("""
         left: 100%;
     }
     
-    /* Result cards with improved styling */
     .detection-result {
         background: var(--card-bg);
         border: 2px solid #f5576c;
@@ -158,7 +152,6 @@ st.markdown("""
         50% { transform: scale(1.1) rotate(180deg); }
     }
     
-    /* Recommendation card */
     .recommendation-card {
         background: var(--card-bg);
         border: 1px solid #4facfe;
@@ -190,7 +183,6 @@ st.markdown("""
         transform: translateX(5px);
     }
     
-    /* Sidebar styling */
     .sidebar-content {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -201,7 +193,6 @@ st.markdown("""
         box-shadow: var(--shadow);
     }
     
-    /* Enhanced buttons */
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -227,33 +218,6 @@ st.markdown("""
         transform: translateY(0);
     }
     
-    /* Home page cards */
-    .home-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        padding: 2rem;
-        border-radius: 20px;
-        text-align: center;
-        height: 100%;
-        color: var(--text-primary);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .home-card:hover {
-        transform: translateY(-5px);
-        border-color: #667eea;
-        box-shadow: var(--shadow-hover);
-    }
-    
-    .home-card h3 {
-        color: #5dade2;
-        margin-bottom: 1rem;
-        font-weight: 600;
-    }
-    
-    /* Disease cards grid - responsive */
     .disease-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -290,7 +254,6 @@ st.markdown("""
         display: block;
     }
     
-    /* Info cards for disease details */
     .info-card-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -346,7 +309,6 @@ st.markdown("""
         transform: translateX(5px);
     }
     
-    /* Dos and Don'ts styling */
     .tips-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -393,13 +355,26 @@ st.markdown("""
         background: rgba(231, 76, 60, 0.2);
         transform: translateX(5px);
     }
+
+    /* Custom Styling for Streamlit Camera Input */
+    [data-testid="stCameraInput"] {
+        max-width: 720px; /* Batasi lebar maksimum di layar besar */
+        margin: 20px auto; /* Pusatkan komponen di tengah */
+        border: 2px dashed var(--border-color);
+        border-radius: 20px;
+        padding: 1rem;
+    }
+
+    [data-testid="stCameraInput"] video {
+        width: 100%; /* Buat video mengisi kontainer */
+        height: auto; /* Atur tinggi secara otomatis sesuai rasio aspek */
+        border-radius: 15px; /* Beri sedikit lengkungan pada video feed */
+    }
     
-    /* Progress bar styling */
     .stProgress > div > div > div > div {
         background: linear-gradient(90deg, #667eea, #764ba2);
     }
     
-    /* Tab styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
     }
@@ -418,7 +393,6 @@ st.markdown("""
         color: white;
     }
     
-    /* Responsive design */
     @media (max-width: 768px) {
         .main-header {
             font-size: 2rem;
@@ -439,7 +413,6 @@ st.markdown("""
         }
     }
     
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
         width: 8px;
     }
@@ -457,21 +430,6 @@ st.markdown("""
         background: #764ba2;
     }
     
-    /* Loading animation */
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    .loading-spinner {
-        border: 4px solid rgba(102, 126, 234, 0.3);
-        border-radius: 50%;
-        border-top: 4px solid #667eea;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -497,7 +455,6 @@ DISEASE_INFO = {
     }
 }
 
-# Only disease classes are now relevant
 DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
 
 @st.cache_resource
@@ -530,7 +487,6 @@ def predict_disease_yolo(model, image):
 
                 for i in range(len(boxes)):
                     class_name = model.names[int(classes[i])]
-
                     if class_name in DISEASE_CLASSES:
                         detection = {
                             "disease": class_name,
@@ -538,15 +494,13 @@ def predict_disease_yolo(model, image):
                             "box": boxes[i],
                         }
                         detections.append(detection)
-
         return detections
-
     except Exception as e:
         st.error(f"Prediction error: {str(e)}")
         return []
 
 def draw_detection_on_image(image, detections):
-    """Draw all bounding boxes and labels on the image. All detections are red."""
+    """Draw all bounding boxes and labels on the image."""
     if not isinstance(image, Image.Image):
         image = Image.fromarray(image)
 
@@ -556,12 +510,10 @@ def draw_detection_on_image(image, detections):
         box = detection["box"]
         disease = detection["disease"]
         confidence = detection["confidence"]
-
         x1, y1, x2, y2 = map(int, box)
         color = (0, 0, 255)  # Red for disease
 
         cv2.rectangle(cv_image, (x1, y1), (x2, y2), color, 3)
-
         label = f"{disease}: {confidence:.1%}"
         label_size, _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
         cv2.rectangle(cv_image, (x1, y1 - label_size[1] - 15), (x1 + label_size[0] + 10, y1), color, -1)
@@ -570,7 +522,7 @@ def draw_detection_on_image(image, detections):
     return cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
 
 def analyze_detections(detections):
-    """Simplified analysis. If there are any detections, it's a disease. Otherwise, no disease is detected."""
+    """Analyze detections to determine the status."""
     if not detections:
         return "no_disease_detected", "No disease was detected on the plant.", []
     else:
@@ -578,35 +530,74 @@ def analyze_detections(detections):
         return "diseased", f"Detected {len(disease_names)} area(s) of disease.", disease_names
 
 def display_disease_info(disease_name):
-    """Display disease information and recommendations in a modern card layout."""
-    if disease_name in DISEASE_INFO:
-        info = DISEASE_INFO.get(disease_name)
-        if not info:
-            return
+    """Display disease information and recommendations."""
+    info = DISEASE_INFO.get(disease_name)
+    if not info:
+        return
 
-        st.markdown(f"### 📋 Information & Recommendations for: **{disease_name}**")
+    st.markdown(f"### 📋 Information & Recommendations for: **{disease_name}**")
+    symptoms_list = ''.join([f"<li>{symptom}</li>" for symptom in info['symptoms']])
+    prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
+    treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
 
-        symptoms_list = ''.join([f"<li>{symptom}</li>" for symptom in info['symptoms']])
-        prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
-        treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
+    card_html = f"""
+    <div class="info-card-grid">
+        <div class="info-card"><h4>🔍 Common Symptoms</h4><ul>{symptoms_list}</ul></div>
+        <div class="info-card"><h4>🛡️ Prevention Methods</h4><ul>{prevention_list}</ul></div>
+        <div class="info-card-treatment"><h4>💊 Treatment Methods</h4><ul>{treatment_list}</ul></div>
+    </div>
+    """
+    st.markdown(card_html, unsafe_allow_html=True)
 
-        card_html = f"""
-        <div class="info-card-grid">
-            <div class="info-card">
-                <h4>🔍 Common Symptoms</h4>
-                <ul>{symptoms_list}</ul>
-            </div>
-            <div class="info-card">
-                <h4>🛡️ Prevention Methods</h4>
-                <ul>{prevention_list}</ul>
-            </div>
-            <div class="info-card-treatment">
-                <h4>💊 Treatment Methods</h4>
-                <ul>{treatment_list}</ul>
-            </div>
+def process_and_display_results(image):
+    """Process image, run prediction, and display results."""
+    with st.spinner("🔍 Analyzing your orchid image..."):
+        detections = predict_disease_yolo(model, image)
+
+    st.markdown("---")
+    st.subheader("📊 Analysis Results")
+
+    col_res1, col_res2 = st.columns(2)
+    with col_res1:
+        st.image(image, caption="📷 Original Image", use_container_width=True)
+    with col_res2:
+        annotated_image = draw_detection_on_image(image, detections)
+        st.image(annotated_image, caption="🤖 AI Detection Result", use_container_width=True)
+
+    status, message, diseases_found = analyze_detections(detections)
+
+    if status == "no_disease_detected":
+        st.markdown(f"""
+        <div class="healthy-result">
+            <h2>✅ Excellent News!</h2><h3>No Disease Detected</h3>
+            <p style="font-size: 1.1rem; margin: 1rem 0;">{message}</p>
+            <p>Your orchid appears healthy. Keep up the excellent care! 🌟</p>
         </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+        st.markdown("""
+        <div class="recommendation-card">
+            <h4>🌱 Maintenance Tips for Healthy Orchids</h4>
+            <ul>
+                <li><strong>💡 Lighting:</strong> Bright, indirect sunlight. East-facing windows are ideal.</li>
+                <li><strong>💧 Watering:</strong> Water thoroughly when the growing medium is almost dry. Do not let it sit in water.</li>
+                <li><strong>🌡️ Humidity:</strong> Orchids thrive in 50-70% humidity. Consider a humidifier or a pebble tray.</li>
+                <li><strong>🌬️ Airflow:</strong> Good air circulation is crucial to prevent fungal and bacterial issues.</li>
+                <li><strong>🌿 Fertilizing:</strong> Use a balanced orchid fertilizer weakly during the growing season.</li>
+                <li><strong>🧐 Inspect Regularly:</strong> Check your plant often for any early signs of pests or disease.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    elif status == "diseased":
+        most_common_disease = Counter(diseases_found).most_common(1)[0][0]
+        unique_diseases = list(set(diseases_found))
+        st.markdown(f"""
+        <div class="detection-result">
+            <h2>⚠️ Disease Detected!</h2><p>{message}</p>
+            <p>Disease types: <strong>{', '.join(unique_diseases)}</strong></p>
+            <p>Take immediate action to prevent the disease from spreading!</p>
+        </div>
+        """, unsafe_allow_html=True)
+        display_disease_info(most_common_disease)
 
 def main():
     st.markdown('<h1 class="main-header">🌺 Orchid Disease Detection System</h1>', unsafe_allow_html=True)
@@ -618,23 +609,19 @@ def main():
             <p>An AI-powered system to detect specific diseases on orchid plants using advanced YOLO technology.</p>
         </div>
         """, unsafe_allow_html=True)
-
         st.markdown("### 🦠 Detectable Diseases:")
         diseases = [
             ("🌸 Petal Blight", "Fungal infection affecting flower petals"),
             ("🍃 Brown Spot", "Pseudobulb rotting disease"),
             ("🌿 Soft Rot", "Bacterial tissue deterioration")
         ]
-        
         for disease, desc in diseases:
             st.markdown(f"**{disease}**")
             st.caption(desc)
-
         st.markdown("### 📊 Model Performance:")
         st.progress(0.89)
         st.markdown("**Average Accuracy: 89%**")
         st.caption("Trained on 10,000+ orchid images")
-
         st.markdown("### 💡 Pro Tips:")
         st.info("🔍 Use good lighting\n\n📸 Focus on affected areas\n\n🎯 Avoid blurry images\n\n🌟 Plain backgrounds work best")
 
@@ -652,34 +639,17 @@ def main():
             </p>
         </div>
         """, unsafe_allow_html=True)
-
         st.markdown("---")
-
         st.markdown("## 🎯 Detectable Diseases")
         st.markdown("""
         <div class="disease-grid">
-            <div class="disease-card">
-                <div class="disease-icon">🌸</div>
-                <h4>Petal Blight</h4>
-                <p>Fungal infection causing brown spots and premature flower drop. Often occurs in humid conditions.</p>
-            </div>
-            <div class="disease-card">
-                <div class="disease-icon">🍃</div>
-                <h4>Brown Spot</h4>
-                <p>Pseudobulb rotting disease that causes soft, brown tissue deterioration and spore formation.</p>
-            </div>
-            <div class="disease-card">
-                <div class="disease-icon">🌿</div>
-                <h4>Soft Rot</h4>
-                <p>Bacterial infection leading to mushy tissue, foul odor, and rapid plant deterioration.</p>
-            </div>
+            <div class="disease-card"><div class="disease-icon">🌸</div><h4>Petal Blight</h4><p>Fungal infection causing brown spots and premature flower drop. Often occurs in humid conditions.</p></div>
+            <div class="disease-card"><div class="disease-icon">🍃</div><h4>Brown Spot</h4><p>Pseudobulb rotting disease that causes soft, brown tissue deterioration and spore formation.</p></div>
+            <div class="disease-card"><div class="disease-icon">🌿</div><h4>Soft Rot</h4><p>Bacterial infection leading to mushy tissue, foul odor, and rapid plant deterioration.</p></div>
         </div>
         """, unsafe_allow_html=True)
-
         st.markdown("---")
-
         st.markdown("## 📸 Best Practices for Accurate Detection")
-        
         st.markdown("""
         <div class="tips-grid">
             <div class="tips-card">
@@ -704,9 +674,7 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
-        
         st.markdown("---")
-        
         st.markdown("""
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                      padding: 2rem; border-radius: 20px; text-align: center; margin: 2rem 0;">
@@ -717,71 +685,11 @@ def main():
             </p>
         </div>
         """, unsafe_allow_html=True)
-
         st.warning(
             "⚠️ **Important Disclaimer:** This AI tool provides preliminary disease detection and should be used "
             "as a guide alongside professional horticultural advice. Always consult with plant specialists for "
             "serious plant health concerns."
         )
-
-    def process_and_display_results(image):
-        with st.spinner("🔍 Analyzing your orchid image..."):
-            # Add loading animation
-            st.markdown('<div class="loading-spinner"></div>', unsafe_allow_html=True)
-            
-            detections = predict_disease_yolo(model, image)
-
-            st.markdown("---")
-            st.subheader("📊 Analysis Results")
-
-            col_res1, col_res2 = st.columns(2)
-            with col_res1:
-                st.image(image, caption="📷 Original Image", use_container_width=True)
-            with col_res2:
-                annotated_image = draw_detection_on_image(image, detections)
-                st.image(annotated_image, caption="🤖 AI Detection Result", use_container_width=True)
-
-            status, message, diseases_found = analyze_detections(detections)
-
-            if status == "no_disease_detected":
-                st.markdown(f"""
-                <div class="healthy-result">
-                    <h2>✅ Excellent News!</h2>
-                    <h3>No Disease Detected</h3>
-                    <p style="font-size: 1.1rem; margin: 1rem 0;">{message}</p>
-                    <p>Your orchid appears healthy and free from detectable diseases. Keep up the excellent care! 🌟</p>
-                </div>
-                """, unsafe_allow_html=True)
-
-                # --- CORRECTED SECTION ---
-                st.markdown("""
-                <div class="recommendation-card">
-                    <h4>🌱 Maintenance Tips for Healthy Orchids</h4>
-                    <ul>
-                        <li><strong>💡 Lighting:</strong> Bright, indirect sunlight. East or west-facing windows are ideal.</li>
-                        <li><strong>💧 Watering:</strong> Water thoroughly when the growing medium is almost dry. Avoid letting it sit in water.</li>
-                        <li><strong>🌡️ Humidity:</strong> Orchids thrive in 50-70% humidity. Consider a humidifier or a pebble tray.</li>
-                        <li><strong>🌬️ Airflow:</strong> Good air circulation is crucial to prevent fungal and bacterial issues.</li>
-                        <li><strong>🌿 Fertilizing:</strong> Use a balanced orchid fertilizer weakly during the growing season.</li>
-                        <li><strong>🧐 Inspect Regularly:</strong> Check your plant often for any early signs of pests or disease.</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
-
-            elif status == "diseased":
-                most_common_disease = Counter(diseases_found).most_common(1)[0][0]
-                unique_diseases = list(set(diseases_found))
-
-                st.markdown(f"""
-                <div class="detection-result">
-                    <h2>⚠️ Disease Detected!</h2>
-                    <p>{message}</p>
-                    <p>Disease types: <strong>{', '.join(unique_diseases)}</strong></p>
-                    <p>Take immediate action to prevent the disease from spreading!</p>
-                </div>
-                """, unsafe_allow_html=True)
-
-                display_disease_info(most_common_disease)
 
     with tab_camera:
         st.markdown("""
@@ -791,21 +699,24 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
-        if not st.session_state.camera_activated:
-            if st.button("📷 Activate Camera"):
-                st.session_state.camera_activated = True
-                st.rerun()
-        else:
-            st.info("Camera is active. Please position the orchid's leaf or flower and take a picture.")
-            camera_input = st.camera_input("Point the camera at the orchid plant...", key="camera", label_visibility="collapsed")
-
-            if st.button("❌ Deactivate Camera"):
-                st.session_state.camera_activated = False
-                st.rerun()
-
+        if st.session_state.get('camera_activated', False):
+            camera_input = st.camera_input(
+                "Point the camera at the orchid plant...", 
+                key="camera", 
+                label_visibility="collapsed"
+            )
             if camera_input is not None:
                 image = Image.open(camera_input)
                 process_and_display_results(image)
+                st.session_state.camera_activated = False
+                st.rerun()
+            if st.button("❌ Deactivate Camera"):
+                st.session_state.camera_activated = False
+                st.rerun()
+        else:
+            if st.button("📷 Activate Camera"):
+                st.session_state.camera_activated = True
+                st.rerun()
 
     with tab_upload:
         st.markdown("""
@@ -814,13 +725,9 @@ def main():
             <p>Upload a photo of your orchid plant from your gallery for analysis.</p>
         </div>
         """, unsafe_allow_html=True)
-
         uploaded_file = st.file_uploader("Choose an orchid image", type=['jpg', 'jpeg', 'png'])
-
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            
-            # Display the button only after a file is uploaded
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
 
