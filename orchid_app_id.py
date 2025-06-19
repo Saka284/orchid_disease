@@ -398,7 +398,7 @@ DISEASE_INFO = {
     }
 }
 
-DISEASE_CLASSES = ["Busuk Bunga", "Bercak Coklat", "Busuk Lunak"]
+DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
 
 @st.cache_resource
 def load_model():
