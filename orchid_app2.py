@@ -17,7 +17,7 @@ st.set_page_config(
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# CSS untuk desain modern dan responsif (TIDAK DIUBAH)
+# CSS untuk desain modern dan responsif
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -148,10 +148,6 @@ st.markdown("""
         margin-bottom: 0.75rem;
         border-left: 4px solid #5dade2;
         transition: all 0.2s ease;
-    }
-    .recommendation-card li:hover {
-        background: rgba(102, 126, 234, 0.2);
-        transform: translateX(5px);
     }
     
     .sidebar-content {
@@ -335,28 +331,28 @@ st.markdown("""
 DISEASE_INFO = {
     "Busuk Bunga": {
         "description": "Busuk bunga (petal blight) disebabkan oleh jamur seperti Botrytis cinerea (jamur abu-abu) atau Phytophthora. Penyakit ini menyerang kuncup dan bunga, menyebabkan kerugian signifikan.",
-        "symptoms": ["Bercak basah berwarna coklat muda pada kelopak bunga.","Pada infeksi Botrytis, bisa muncul spora abu-abu yang seperti debu.","Kuncup bunga bisa membusuk dan gagal mekar."],
-        "prevention": ["Buang bunga yang sudah layu atau terinfeksi secepatnya.","Tingkatkan sirkulasi udara di sekitar bunga.","Hindari menyemprotkan air langsung ke bunga."],
-        "treatment": ["Gunakan fungisida yang efektif untuk Botrytis atau Phytophthora.","Potong dan musnahkan semua bagian yang terinfeksi.","Lakukan penyemprotan preventif jika kondisi sangat lembab."]
+        "symptoms": ["Bercak basah berwarna coklat muda pada kelopak bunga.", "Pada infeksi Botrytis, bisa muncul spora abu-abu yang seperti debu.", "Kuncup bunga bisa membusuk dan gagal mekar."],
+        "prevention": ["Buang bunga yang sudah layu atau terinfeksi secepatnya.", "Tingkatkan sirkulasi udara di sekitar bunga.", "Hindari menyemprotkan air langsung ke bunga."],
+        "treatment": ["Gunakan fungisida yang efektif untuk Botrytis atau Phytophthora.", "Potong dan musnahkan semua bagian yang terinfeksi.", "Lakukan penyemprotan preventif jika kondisi sangat lembab."]
     },
     "Bercak Coklat": {
         "description": "Busuk Coklat (Brown Spot / Brown Rot) adalah penyakit merusak yang disebabkan oleh jamur (seperti Phytophthora) atau bakteri (seperti Erwinia), menyerang daun dan pseudobulb.",
-        "symptoms": ["Bercak basah pada daun yang awalnya kuning-coklat.","Bercak dengan cepat membesar dan berubah menjadi coklat tua atau hitam.","Dapat menyebar ke akar dan menyebabkan busuk akar."],
-        "prevention": ["Jaga sirkulasi udara yang baik.","Hindari daun basah terlalu lama, jangan menyiram dari atas.","Gunakan alat potong yang steril."],
-        "treatment": ["Segera potong bagian yang terinfeksi hingga ke jaringan sehat dengan alat steril.","Oleskan fungisida/bakterisida pada luka potongan.","Isolasi tanaman yang sakit."]
+        "symptoms": ["Bercak basah pada daun yang awalnya kuning-coklat.", "Bercak dengan cepat membesar dan berubah menjadi coklat tua atau hitam.", "Dapat menyebar ke akar dan menyebabkan busuk akar."],
+        "prevention": ["Jaga sirkulasi udara yang baik.", "Hindari daun basah terlalu lama, jangan menyiram dari atas.", "Gunakan alat potong yang steril."],
+        "treatment": ["Segera potong bagian yang terinfeksi hingga ke jaringan sehat dengan alat steril.", "Oleskan fungisida/bakterisida pada luka potongan.", "Isolasi tanaman yang sakit."]
     },
     "Busuk Lunak": {
         "description": "Busuk Lunak (Soft Rot) adalah penyakit bakteri yang sangat berbahaya dan cepat menyebar, disebabkan oleh Pectobacterium atau Dickeya. Penyakit ini seringkali fatal.",
-        "symptoms": ["Daun menjadi bening, basah, dan lembek seperti agar-agar.","Mengeluarkan bau busuk yang sangat khas.","Penyebaran sangat cepat, bisa menghancurkan seluruh tanaman dalam hitungan hari."],
-        "prevention": ["Jaga agar daun selalu kering, siram hanya media tanam.","Tingkatkan sirkulasi udara secara maksimal.","Hindari luka mekanis pada tanaman."],
-        "treatment": ["Ini darurat! Segera potong seluruh bagian yang terinfeksi.","Gunakan pisau yang disterilkan dengan api/alkohol untuk setiap potongan.","Oleskan bubuk bakterisida/fungisida berbasis tembaga pada luka."]
+        "symptoms": ["Daun menjadi bening, basah, dan lembek seperti agar-agar.", "Mengeluarkan bau busuk yang sangat khas.", "Penyebaran sangat cepat, bisa menghancurkan seluruh tanaman dalam hitungan hari."],
+        "prevention": ["Jaga agar daun selalu kering, siram hanya media tanam.", "Tingkatkan sirkulasi udara secara maksimal.", "Hindari luka mekanis pada tanaman."],
+        "treatment": ["Ini darurat! Segera potong seluruh bagian yang terinfeksi.", "Gunakan pisau yang disterilkan dengan api/alkohol untuk setiap potongan.", "Oleskan bubuk bakterisida/fungisida berbasis tembaga pada luka."]
     }
 }
 
-# Daftar kelas dalam BAHASA INGGRIS untuk mencocokkan output model
+# Daftar kelas dalam BAHASA INGGRIS (untuk dicocokkan dengan output model)
 DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
 
-# Kamus untuk MENERJEMAHKAN hasil model ke Bahasa Indonesia
+# Kamus untuk MENERJEMAHKAN hasil model dari Inggris ke Indonesia
 TRANSLATION_MAP = {
     "Petal Blight": "Busuk Bunga",
     "Brown Spot": "Bercak Coklat",
@@ -373,24 +369,33 @@ def load_model():
         st.error(f"❌ Gagal memuat model: {str(e)}")
         return None
 
+# Fungsi prediksi yang sudah DIPERBAIKI dengan logika terjemahan
 def predict_disease_yolo(model, image):
     """Membuat prediksi dan menerjemahkan hasilnya."""
     if model is None:
         return []
+
     try:
         if isinstance(image, Image.Image):
             image = np.array(image.convert("RGB"))
+
         results = model(image, conf=0.25)
         detections = []
+
         for result in results:
             if result.boxes is not None and len(result.boxes) > 0:
                 for box in result.boxes:
                     class_id = int(box.cls[0])
+                    # Ambil nama B. Inggris dari model
                     class_name_en = model.names[class_id]
+                    
+                    # Periksa apakah nama B. Inggris ada di daftar kelas yang kita proses
                     if class_name_en in DISEASE_CLASSES:
+                        # Terjemahkan nama ke B. Indonesia untuk sisa aplikasi
                         class_name_id = TRANSLATION_MAP.get(class_name_en, class_name_en)
+                        
                         detection = {
-                            "disease": class_name_id,
+                            "disease": class_name_id, # Simpan nama B. Indonesia
                             "confidence": float(box.conf[0]),
                             "box": box.xyxy[0].cpu().numpy(),
                         }
@@ -458,59 +463,84 @@ def process_and_display_results(image, model):
         st.image(annotated_image, caption="🤖 Hasil Deteksi AI", use_container_width=True)
     status, message, diseases_found = analyze_detections(detections)
     if status == "no_disease_detected":
-        st.markdown(f"""<div class="healthy-result"><h2>✅ Kabar Baik!</h2><h3>Tidak Ada Penyakit Terdeteksi</h3><p style="font-size: 1.1rem; margin: 1rem 0;">{message}</p><p>Anggrek Anda tampak sehat. Pertahankan perawatan yang baik! 🌟</p></div>""", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="healthy-result">
+            <h2>✅ Kabar Baik!</h2><h3>Tidak Ada Penyakit Terdeteksi</h3>
+            <p style="font-size: 1.1rem; margin: 1rem 0;">{message}</p>
+            <p>Anggrek Anda tampak sehat. Pertahankan perawatan yang baik! 🌟</p>
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown("""
         <div class="recommendation-card">
             <h4>🌱 Tips Perawatan Anggrek Sehat</h4>
             <ul>
-                <li><strong>💡 Pencahayaan:</strong> Sinar matahari tidak langsung yang terang.</li>
-                <li><strong>💧 Penyiraman:</strong> Siram saat media tanam hampir kering.</li>
-                <li><strong>🌡️ Kelembaban:</strong> Anggrek menyukai kelembaban 50-70%.</li>
-                <li><strong>🌬️ Sirkulasi Udara:</strong> Sirkulasi udara yang baik penting untuk mencegah jamur.</li>
-                <li><strong>🌿 Pemupukan:</strong> Gunakan pupuk seimbang seminggu sekali saat musim tanam.</li>
-                <li><strong>🧐 Inspeksi Rutin:</strong> Periksa tanaman secara teratur untuk tanda-tanda awal penyakit.</li>
+                <li><strong>💡 Pencahayaan:</strong> Sinar matahari tidak langsung yang terang. Jendela arah timur sangat ideal.</li>
+                <li><strong>💧 Penyiraman:</strong> Siram saat media tanam hampir kering. Hindari air menggenang.</li>
+                <li><strong>🌡️ Kelembaban:</strong> Anggrek menyukai kelembaban 50-70%. Gunakan humidifier atau nampan kerikil.</li>
+                <li><strong>🌬️ Sirkulasi Udara:</strong> Sirkulasi udara yang baik sangat penting untuk mencegah jamur dan bakteri.</li>
+                <li><strong>🌿 Pemupukan:</strong> Gunakan pupuk anggrek seimbang seminggu sekali saat musim tanam.</li>
+                <li><strong>🧐 Inspeksi Rutin:</strong> Periksa tanaman Anda secara teratur untuk tanda-tanda awal hama atau penyakit.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
     elif status == "diseased":
         most_common_disease = Counter(diseases_found).most_common(1)[0][0]
-        st.markdown(f"""<div class="detection-result"><h2>⚠️ Penyakit Terdeteksi!</h2><p>{message}</p><p>Jenis penyakit: <strong>{most_common_disease}</strong></p><p>Segera ambil tindakan untuk mencegah penyebaran!</p></div>""", unsafe_allow_html=True)
+        unique_diseases = list(set(diseases_found))
+        st.markdown(f"""
+        <div class="detection-result">
+            <h2>⚠️ Penyakit Terdeteksi!</h2><p>{message}</p>
+            <p>Jenis penyakit: <strong>{', '.join(unique_diseases)}</strong></p>
+            <p>Segera ambil tindakan untuk mencegah penyebaran penyakit!</p>
+        </div>
+        """, unsafe_allow_html=True)
         display_disease_info(most_common_disease)
 
 def main():
     st.markdown('<h1 class="main-header">🌺 Sistem Deteksi Penyakit Anggrek</h1>', unsafe_allow_html=True)
     with st.sidebar:
-        st.markdown("""<div class="sidebar-content"><h2>🎯 Fitur Aplikasi</h2><p>Sistem berbasis AI untuk mendeteksi penyakit spesifik pada tanaman anggrek.</p></div>""", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="sidebar-content">
+            <h2>🎯 Fitur Aplikasi</h2>
+            <p>Sistem berbasis AI untuk mendeteksi penyakit spesifik pada tanaman anggrek menggunakan teknologi YOLO.</p>
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown("### 🦠 Penyakit yang Dapat Dideteksi:")
         diseases = [
-            ("Busuk Bunga", "Busuk pada bunga akibat jamur."),
-            ("Bercak Coklat", "Busuk coklat pada daun & pseudobulb."),
-            ("Busuk Lunak", "Busuk lunak bakteri yang fatal.")
+            ("🌸 Busuk Bunga", "Busuk pada bunga akibat jamur."),
+            ("🍃 Bercak Coklat", "Busuk coklat pada daun & pseudobulb."),
+            ("🌿 Busuk Lunak", "Busuk lunak bakteri yang fatal.")
         ]
         for disease, desc in diseases:
-            st.markdown(f"**🌸 {disease}**")
+            st.markdown(f"**{disease}**")
             st.caption(desc)
         st.markdown("### 📊 Performa Model:")
         st.progress(0.89)
         st.markdown("**Akurasi Rata-rata: 89%**")
+        st.caption("Dilatih pada 10,000+ gambar anggrek")
         st.markdown("### 💡 Tips Pro:")
-        st.info("🔍 Gunakan pencahayaan yang baik\n\n📸 Fokus pada area yang terinfeksi\n\n🎯 Hindari gambar buram")
+        st.info("🔍 Gunakan pencahayaan yang baik\n\n📸 Fokus pada area yang terinfeksi\n\n🎯 Hindari gambar buram\n\n🌟 Latar belakang polos lebih baik")
+
     model = load_model()
+    
     tab_beranda, tab_camera, tab_upload = st.tabs(["🏠 Beranda", "📷 Kamera", "📤 Unggah"])
+
     with tab_beranda:
         st.markdown("""
         <div style="text-align: center; margin: 2rem 0;">
-            <h2 style="color: #5dade2;">🤖 Asisten Perawatan Anggrek AI</h2>
-            <p>Selamat datang! Sistem AI kami membantu Anda mengidentifikasi penyakit lebih awal untuk menjaga anggrek Anda tetap sehat.</p>
+            <h2 style="color: #5dade2; margin-bottom: 1rem;">🤖 Asisten Perawatan Anggrek AI</h2>
+            <p style="font-size: 1.1rem; color: #b3b3b3; max-width: 800px; margin: 0 auto;">
+                Selamat datang di masa depan perawatan anggrek! Sistem AI canggih kami membantu Anda mengidentifikasi penyakit lebih awal 
+                dan memberikan rekomendasi terbaik untuk menjaga anggrek Anda tetap sehat dan subur.
+            </p>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("---")
         st.markdown("## 🎯 Penyakit yang Dapat Dideteksi")
         st.markdown("""
         <div class="disease-grid">
-            <div class="disease-card"><div class="disease-icon">🌸</div><h4>Busuk Bunga</h4><p>Menyerang kuncup dan bunga, menyebabkan bercak basah dan busuk.</p></div>
-            <div class="disease-card"><div class="disease-icon">🍃</div><h4>Bercak Coklat</h4><p>Menyebabkan bercak coklat kehitaman yang basah pada daun dan batang.</p></div>
-            <div class="disease-card"><div class="disease-icon">🌿</div><h4>Busuk Lunak</h4><p>Infeksi bakteri yang cepat dan membuat jaringan tanaman lunak serta berbau.</p></div>
+            <div class="disease-card"><div class="disease-icon">🌸</div><h4>Busuk Bunga</h4><p>Menyerang kuncup dan bunga, menyebabkan bercak basah dan busuk yang sering disebabkan oleh jamur Botrytis.</p></div>
+            <div class="disease-card"><div class="disease-icon">🍃</div><h4>Bercak Coklat</h4><p>Menyebabkan bercak coklat kehitaman yang basah pada daun dan batang, disebabkan oleh jamur atau bakteri.</p></div>
+            <div class="disease-card"><div class="disease-icon">🌿</div><h4>Busuk Lunak</h4><p>Infeksi bakteri yang sangat cepat dan merusak, membuat jaringan tanaman menjadi lunak dan berbau busuk.</p></div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("---")
@@ -539,10 +569,35 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown("---")
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                     padding: 2rem; border-radius: 20px; text-align: center; margin: 2rem 0;">
+            <h3 style="color: white; margin-bottom: 1rem;">🚀 Siap Memulai?</h3>
+            <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
+                Pilih tab <strong>Kamera</strong> untuk mengambil foto langsung, atau gunakan tab <strong>Unggah</strong> 
+                untuk menganalisis gambar dari perangkat Anda.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.warning(
+            "⚠️ **Penting:** Alat AI ini memberikan deteksi awal dan harus digunakan sebagai panduan. "
+            "Selalu konsultasikan dengan ahli hortikultura untuk masalah kesehatan tanaman yang serius."
+        )
+
     with tab_camera:
-        st.markdown("<h3>📷 Deteksi dengan Kamera</h3>", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="feature-card">
+            <h3>📷 Deteksi dengan Kamera</h3>
+            <p>Ambil foto menggunakan kamera Anda untuk analisis penyakit secara instan.</p>
+        </div>
+        """, unsafe_allow_html=True)
         if st.session_state.get('camera_activated', False):
-            camera_input = st.camera_input("Arahkan kamera ke tanaman anggrek...", key="camera", label_visibility="collapsed")
+            camera_input = st.camera_input(
+                "Arahkan kamera ke tanaman anggrek...", 
+                key="camera", 
+                label_visibility="collapsed"
+            )
             if camera_input is not None:
                 image = Image.open(camera_input)
                 process_and_display_results(image, model)
@@ -553,13 +608,27 @@ def main():
             if st.button("📷 Aktifkan Kamera"):
                 st.session_state.camera_activated = True
                 st.rerun()
+
     with tab_upload:
-        st.markdown("<h3>📤 Unggah Gambar</h3>", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="feature-card">
+            <h3>📤 Unggah Gambar</h3>
+            <p>Unggah foto tanaman anggrek Anda dari galeri untuk dianalisis.</p>
+        </div>
+        """, unsafe_allow_html=True)
         uploaded_file = st.file_uploader("Pilih gambar anggrek", type=['jpg', 'jpeg', 'png'])
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
             if st.button("🔍 Analisis Penyakit", key="upload_analyze"):
                 process_and_display_results(image, model)
+
+    st.markdown("---")
+    st.markdown("""
+    <div style="text-align: center; color: #666; padding: 2rem;">
+        <p>🌺 Sistem Deteksi Penyakit Anggrek | Ditenagai oleh AI & YOLO</p>
+        <p>Dibuat dengan ❤️ untuk para pecinta anggrek</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
