@@ -255,7 +255,7 @@ st.markdown("""
     
     .info-card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
         margin-top: 2rem;
     }
@@ -355,7 +355,6 @@ st.markdown("""
         transform: translateX(5px);
     }
 
-    /* Custom Styling for Streamlit Camera Input */
     [data-testid="stCameraInput"] {
         max-width: 720px;
         margin: 20px auto;
@@ -402,7 +401,7 @@ st.markdown("""
             padding: 1.5rem;
         }
         
-        .disease-grid, .info-card-grid, .tips-grid {
+        .info-card-grid, .disease-grid, .tips-grid {
             grid-template-columns: 1fr;
             gap: 1rem;
         }
@@ -548,7 +547,6 @@ def display_disease_info(disease_name):
     """
     st.markdown(card_html, unsafe_allow_html=True)
 
-# PERBAIKAN: Tambahkan 'model' sebagai parameter
 def process_and_display_results(image, model):
     """Process image, run prediction, and display results."""
     with st.spinner("🔍 Analyzing your orchid image..."):
@@ -705,12 +703,11 @@ def main():
                 key="camera", 
                 label_visibility="collapsed"
             )
+            
             if camera_input is not None:
                 image = Image.open(camera_input)
-                # PERBAIKAN: Tambahkan 'model' saat memanggil fungsi
                 process_and_display_results(image, model)
-                st.session_state.camera_activated = False
-                st.rerun()
+            
             if st.button("❌ Deactivate Camera"):
                 st.session_state.camera_activated = False
                 st.rerun()
@@ -730,7 +727,6 @@ def main():
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
-                # PERBAIKAN: Tambahkan 'model' saat memanggil fungsi
                 process_and_display_results(image, model)
 
     st.markdown("---")
