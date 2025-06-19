@@ -168,6 +168,27 @@ st.markdown("""
         color: var(--text-primary);
         box-shadow: 0 0 20px rgba(79, 172, 254, 0.2);
     }
+    .recommendation-card h4 {
+        color: #5dade2;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    .recommendation-card ul {
+        list-style: none;
+        padding: 0;
+    }
+    .recommendation-card li {
+        background: rgba(102, 126, 234, 0.1);
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        border-left: 4px solid #5dade2;
+        transition: all 0.2s ease;
+    }
+    .recommendation-card li:hover {
+        background: rgba(102, 126, 234, 0.2);
+        transform: translateX(5px);
+    }
     
     /* Sidebar styling */
     .sidebar-content {
@@ -649,6 +670,7 @@ def main():
             </div>
             <div class="disease-card">
                 <div class="disease-icon">🌿</div>
+                <h4>Soft Rot</h4>
                 <p>Bacterial infection leading to mushy tissue, foul odor, and rapid plant deterioration.</p>
             </div>
         </div>
@@ -687,7 +709,7 @@ def main():
         
         st.markdown("""
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                    padding: 2rem; border-radius: 20px; text-align: center; margin: 2rem 0;">
+                     padding: 2rem; border-radius: 20px; text-align: center; margin: 2rem 0;">
             <h3 style="color: white; margin-bottom: 1rem;">🚀 Ready to Get Started?</h3>
             <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
                 Choose the <strong>Camera</strong> tab to take a live photo, or use the <strong>Upload</strong> tab 
@@ -731,19 +753,17 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
 
+                # --- CORRECTED SECTION ---
                 st.markdown("""
                 <div class="recommendation-card">
-                    <h3>🌱 Maintenance Tips for Healthy Orchids</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                        <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 10px;">
-                            <strong>💡 Lighting:</strong> Bright, indirect sunlight. East or west windows are ideal.
-                        </div>
-                        <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 10px;">
-                            <strong>💧 Watering:</strong> Water when medium is almost dry. Avoid waterlogging.growing medium is almost dry. Do not let it sit in water.</li>
-                        <li><strong>Humidity:</strong> Orchids thrive in 50-70% humidity. Consider a humidifier or a pebble tray.</li>
-                        <li><strong>Airflow:</strong> Good air circulation is crucial to prevent fungal and bacterial issues.</li>
-                        <li><strong>Fertilizing:</strong> Use a balanced orchid fertilizer weakly, weekly during the growing season.</li>
-                        <li><strong>Inspect Regularly:</strong> Check your plant often for any early signs of pests or disease.</li>
+                    <h4>🌱 Maintenance Tips for Healthy Orchids</h4>
+                    <ul>
+                        <li><strong>💡 Lighting:</strong> Bright, indirect sunlight. East or west-facing windows are ideal.</li>
+                        <li><strong>💧 Watering:</strong> Water thoroughly when the growing medium is almost dry. Avoid letting it sit in water.</li>
+                        <li><strong>🌡️ Humidity:</strong> Orchids thrive in 50-70% humidity. Consider a humidifier or a pebble tray.</li>
+                        <li><strong>🌬️ Airflow:</strong> Good air circulation is crucial to prevent fungal and bacterial issues.</li>
+                        <li><strong>🌿 Fertilizing:</strong> Use a balanced orchid fertilizer weakly during the growing season.</li>
+                        <li><strong>🧐 Inspect Regularly:</strong> Check your plant often for any early signs of pests or disease.</li>
                     </ul>
                 </div>
                 """, unsafe_allow_html=True)
@@ -763,7 +783,6 @@ def main():
 
                 display_disease_info(most_common_disease)
 
-    # --- KONTEN TAB LAIN DIKEMBALIKAN KE ASLI, TANPA PERUBAHAN TOMBOL ---
     with tab_camera:
         st.markdown("""
         <div class="feature-card">
@@ -801,6 +820,7 @@ def main():
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
             
+            # Display the button only after a file is uploaded
             if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image)
 
