@@ -149,10 +149,6 @@ st.markdown("""
         border-left: 4px solid #5dade2;
         transition: all 0.2s ease;
     }
-    .recommendation-card li:hover {
-        background: rgba(102, 126, 234, 0.2);
-        transform: translateX(5px);
-    }
     
     .sidebar-content {
         background: var(--card-bg);
@@ -325,80 +321,43 @@ st.markdown("""
             gap: 1rem;
         }
     }
-    
 </style>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# DATABASE PENYAKIT VERSI BAHASA INDONESIA
+# KONFIGURASI LOGIKA BAHASA DAN DATABASE PENYAKIT
 # ==============================================================================
+
 DISEASE_INFO = {
     "Busuk Bunga": {
         "description": "Busuk bunga (petal blight) disebabkan oleh jamur seperti Botrytis cinerea (jamur abu-abu) atau Phytophthora. Penyakit ini menyerang kuncup dan bunga, menyebabkan kerugian signifikan.",
-        "symptoms": [
-            "Bercak basah berwarna coklat muda pada kelopak bunga.",
-            "Pada infeksi Botrytis, bisa muncul spora abu-abu yang seperti debu.",
-            "Infeksi Phytophthora tidak menghasilkan spora abu-abu namun tetap menyebabkan busuk basah.",
-            "Kuncup bunga bisa membusuk dan gagal mekar."
-        ],
-        "prevention": [
-            "Buang bunga yang sudah layu atau terinfeksi secepatnya.",
-            "Tingkatkan sirkulasi udara di sekitar bunga untuk mengurangi kelembaban.",
-            "Hindari menyemprotkan air langsung ke bunga.",
-            "Jaga kebersihan area tanam dari sisa-sisa tanaman."
-        ],
-        "treatment": [
-            "Gunakan fungisida yang efektif untuk Botrytis atau Phytophthora (contoh: Captan, Aliette, Subdue).",
-            "Lakukan penyemprotan preventif jika kondisi lingkungan sangat lembab.",
-            "Potong dan musnahkan semua bagian yang terinfeksi untuk menghentikan penyebaran.",
-            "Pertimbangkan agen kontrol hayati (mikroorganisme antagonis) jika tersedia."
-        ]
+        "symptoms": ["Bercak basah berwarna coklat muda pada kelopak bunga.", "Pada infeksi Botrytis, bisa muncul spora abu-abu yang seperti debu.", "Kuncup bunga bisa membusuk dan gagal mekar."],
+        "prevention": ["Buang bunga yang sudah layu atau terinfeksi secepatnya.", "Tingkatkan sirkulasi udara di sekitar bunga.", "Hindari menyemprotkan air langsung ke bunga."],
+        "treatment": ["Gunakan fungisida yang efektif untuk Botrytis atau Phytophthora.", "Potong dan musnahkan semua bagian yang terinfeksi.", "Lakukan penyemprotan preventif jika kondisi sangat lembab."]
     },
     "Bercak Coklat": {
         "description": "Busuk Coklat (Brown Spot / Brown Rot) adalah penyakit merusak yang disebabkan oleh jamur (seperti Phytophthora) atau bakteri (seperti Erwinia), menyerang daun dan pseudobulb.",
-        "symptoms": [
-            "Bercak basah (water-logged) pada daun yang awalnya kuning-coklat.",
-            "Bercak dengan cepat membesar dan berubah menjadi coklat tua atau hitam.",
-            "Pada beberapa jenis anggrek, infeksi dimulai dari pangkal daun dan menyebar ke atas.",
-            "Dalam kasus parah, dapat menyebar ke akar dan menyebabkan busuk akar."
-        ],
-        "prevention": [
-            "Jaga sirkulasi udara yang baik untuk mengurangi kelembaban.",
-            "Hindari daun basah terlalu lama, jangan menyiram dari atas.",
-            "Pastikan media tanam memiliki drainase yang baik.",
-            "Selalu gunakan alat potong yang steril saat melakukan perawatan."
-        ],
-        "treatment": [
-            "Segera potong bagian tanaman yang terinfeksi hingga ke jaringan sehat dengan alat steril.",
-            "Oleskan fungisida/bakterisida (contoh: Physan 20, Captan, Aliette) pada luka potongan.",
-            "Untuk serangan jamur Phytophthora, fungisida sistemik seperti Aliette atau Subdue sangat efektif.",
-            "Isolasi tanaman yang sakit untuk mencegah penularan."
-        ]
+        "symptoms": ["Bercak basah pada daun yang awalnya kuning-coklat.", "Bercak dengan cepat membesar dan berubah menjadi coklat tua atau hitam.", "Dapat menyebar ke akar dan menyebabkan busuk akar."],
+        "prevention": ["Jaga sirkulasi udara yang baik.", "Hindari daun basah terlalu lama, jangan menyiram dari atas.", "Gunakan alat potong yang steril."],
+        "treatment": ["Segera potong bagian yang terinfeksi hingga ke jaringan sehat dengan alat steril.", "Oleskan fungisida/bakterisida pada luka potongan.", "Isolasi tanaman yang sakit."]
     },
     "Busuk Lunak": {
-        "description": "Busuk Lunak (Soft Rot) adalah penyakit bakteri yang sangat berbahaya dan cepat menyebar, disebabkan oleh Pectobacterium atau Dickeya. Penyakit ini seringkali fatal, terutama pada Phalaenopsis.",
-        "symptoms": [
-            "Daun menjadi bening, basah, dan lembek seperti agar-agar.",
-            "Mengeluarkan bau busuk yang sangat khas dan tidak sedap.",
-            "Seringkali dimulai dengan bintik kecil yang basah dan dikelilingi lingkaran kuning (halo).",
-            "Penyebaran sangat cepat, dapat menghancurkan seluruh tanaman dalam hitungan hari."
-        ],
-        "prevention": [
-            "Jaga agar daun selalu kering. Siram hanya pada bagian media tanam.",
-            "Tingkatkan sirkulasi udara secara maksimal di sekitar tanaman.",
-            "Hindari luka mekanis pada daun dan akar yang bisa menjadi pintu masuk bakteri.",
-            "Periksa tanaman secara rutin, terutama saat cuaca hangat dan lembab."
-        ],
-        "treatment": [
-            "Ini adalah kondisi darurat! Segera potong seluruh bagian yang terinfeksi sampai ke jaringan yang sehat.",
-            "Gunakan pisau yang disterilkan (dengan api atau alkohol) untuk SETIAP potongan.",
-            "Oleskan bubuk bakterisida/fungisida berbasis tembaga (Copper) atau antibiotik pada luka.",
-            "Hentikan penyiraman sementara dan isolasi tanaman dari yang lain."
-        ]
+        "description": "Busuk Lunak (Soft Rot) adalah penyakit bakteri yang sangat berbahaya dan cepat menyebar, disebabkan oleh Pectobacterium atau Dickeya. Penyakit ini seringkali fatal.",
+        "symptoms": ["Daun menjadi bening, basah, dan lembek seperti agar-agar.", "Mengeluarkan bau busuk yang sangat khas.", "Penyebaran sangat cepat, bisa menghancurkan seluruh tanaman dalam hitungan hari."],
+        "prevention": ["Jaga agar daun selalu kering, siram hanya media tanam.", "Tingkatkan sirkulasi udara secara maksimal.", "Hindari luka mekanis pada tanaman."],
+        "treatment": ["Ini darurat! Segera potong seluruh bagian yang terinfeksi.", "Gunakan pisau yang disterilkan dengan api/alkohol untuk setiap potongan.", "Oleskan bubuk bakterisida/fungisida berbasis tembaga pada luka."]
     }
 }
 
+# Daftar kelas dalam BAHASA INGGRIS (untuk dicocokkan dengan output model)
 DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
+
+# Kamus untuk MENERJEMAHKAN hasil model dari Inggris ke Indonesia
+TRANSLATION_MAP = {
+    "Petal Blight": "Busuk Bunga",
+    "Brown Spot": "Bercak Coklat",
+    "Soft Rot": "Busuk Lunak"
+}
 
 @st.cache_resource
 def load_model():
@@ -410,8 +369,9 @@ def load_model():
         st.error(f"❌ Gagal memuat model: {str(e)}")
         return None
 
+# Fungsi prediksi yang sudah DIPERBAIKI dengan logika terjemahan
 def predict_disease_yolo(model, image):
-    """Membuat prediksi menggunakan model YOLO"""
+    """Membuat prediksi dan menerjemahkan hasilnya."""
     if model is None:
         return []
 
@@ -424,18 +384,20 @@ def predict_disease_yolo(model, image):
 
         for result in results:
             if result.boxes is not None and len(result.boxes) > 0:
-                confidences = result.boxes.conf.cpu().numpy()
-                classes = result.boxes.cls.cpu().numpy()
-                boxes = result.boxes.xyxy.cpu().numpy()
-
-                for i in range(len(boxes)):
-                    class_id = int(classes[i])
-                    class_name = model.names[class_id]
-                    if class_name in DISEASE_CLASSES:
+                for box in result.boxes:
+                    class_id = int(box.cls[0])
+                    # Ambil nama B. Inggris dari model
+                    class_name_en = model.names[class_id]
+                    
+                    # Periksa apakah nama B. Inggris ada di daftar kelas yang kita proses
+                    if class_name_en in DISEASE_CLASSES:
+                        # Terjemahkan nama ke B. Indonesia untuk sisa aplikasi
+                        class_name_id = TRANSLATION_MAP.get(class_name_en, class_name_en)
+                        
                         detection = {
-                            "disease": class_name,
-                            "confidence": float(confidences[i]),
-                            "box": boxes[i],
+                            "disease": class_name_id, # Simpan nama B. Indonesia
+                            "confidence": float(box.conf[0]),
+                            "box": box.xyxy[0].cpu().numpy(),
                         }
                         detections.append(detection)
         return detections
@@ -447,22 +409,18 @@ def draw_detection_on_image(image, detections):
     """Menggambar kotak deteksi pada gambar."""
     if not isinstance(image, Image.Image):
         image = Image.fromarray(image)
-
     cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-
     for detection in detections:
         box = detection["box"]
         disease = detection["disease"]
         confidence = detection["confidence"]
         x1, y1, x2, y2 = map(int, box)
-        color = (0, 0, 255)  # Merah untuk penyakit
-
+        color = (0, 0, 255)
         cv2.rectangle(cv_image, (x1, y1), (x2, y2), color, 3)
         label = f"{disease}: {confidence:.1%}"
         label_size, _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
         cv2.rectangle(cv_image, (x1, y1 - label_size[1] - 15), (x1 + label_size[0] + 10, y1), color, -1)
         cv2.putText(cv_image, label, (x1 + 5, y1 - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-
     return cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
 
 def analyze_detections(detections):
@@ -478,12 +436,10 @@ def display_disease_info(disease_name):
     info = DISEASE_INFO.get(disease_name)
     if not info:
         return
-
     st.markdown(f"### 📋 Informasi & Rekomendasi untuk: **{disease_name}**")
     symptoms_list = ''.join([f"<li>{symptom}</li>" for symptom in info['symptoms']])
     prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
     treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
-
     card_html = f"""
     <div class="info-card-grid">
         <div class="info-card"><h4>🔍 Gejala Umum</h4><ul>{symptoms_list}</ul></div>
@@ -497,19 +453,15 @@ def process_and_display_results(image, model):
     """Memproses gambar, menjalankan prediksi, dan menampilkan hasil."""
     with st.spinner("🔍 Menganalisis gambar anggrek Anda..."):
         detections = predict_disease_yolo(model, image)
-
     st.markdown("---")
     st.subheader("📊 Hasil Analisis")
-
     col_res1, col_res2 = st.columns(2)
     with col_res1:
         st.image(image, caption="📷 Gambar Asli", use_container_width=True)
     with col_res2:
         annotated_image = draw_detection_on_image(image, detections)
         st.image(annotated_image, caption="🤖 Hasil Deteksi AI", use_container_width=True)
-
     status, message, diseases_found = analyze_detections(detections)
-
     if status == "no_disease_detected":
         st.markdown(f"""
         <div class="healthy-result">
@@ -545,7 +497,6 @@ def process_and_display_results(image, model):
 
 def main():
     st.markdown('<h1 class="main-header">🌺 Sistem Deteksi Penyakit Anggrek</h1>', unsafe_allow_html=True)
-
     with st.sidebar:
         st.markdown("""
         <div class="sidebar-content">
@@ -641,18 +592,15 @@ def main():
             <p>Ambil foto menggunakan kamera Anda untuk analisis penyakit secara instan.</p>
         </div>
         """, unsafe_allow_html=True)
-
         if st.session_state.get('camera_activated', False):
             camera_input = st.camera_input(
                 "Arahkan kamera ke tanaman anggrek...", 
                 key="camera", 
                 label_visibility="collapsed"
             )
-            
             if camera_input is not None:
                 image = Image.open(camera_input)
                 process_and_display_results(image, model)
-            
             if st.button("❌ Nonaktifkan Kamera"):
                 st.session_state.camera_activated = False
                 st.rerun()

@@ -5,19 +5,19 @@ from PIL import Image
 from collections import Counter
 from ultralytics import YOLO
 
-# Konfigurasi Halaman
+# Page Config
 st.set_page_config(
-    page_title="🌺 Deteksi Penyakit Anggrek",
+    page_title="🌺 Orchid Disease Detection",
     page_icon="🌺",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Inisialisasi session_state untuk kontrol kamera
+# Initialize session_state for camera control
 if 'camera_activated' not in st.session_state:
     st.session_state.camera_activated = False
 
-# CSS untuk desain modern dan responsif
+# Enhanced CSS with modern design and responsiveness
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -321,57 +321,93 @@ st.markdown("""
             gap: 1rem;
         }
     }
+    
 </style>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# KONFIGURASI LOGIKA BAHASA DAN DATABASE PENYAKIT
+# DISEASE DATABASE - ENGLISH VERSION
 # ==============================================================================
-
 DISEASE_INFO = {
-    "Busuk Bunga": {
-        "description": "Busuk bunga (petal blight) disebabkan oleh jamur seperti Botrytis cinerea (jamur abu-abu) atau Phytophthora. Penyakit ini menyerang kuncup dan bunga, menyebabkan kerugian signifikan.",
-        "symptoms": ["Bercak basah berwarna coklat muda pada kelopak bunga.", "Pada infeksi Botrytis, bisa muncul spora abu-abu yang seperti debu.", "Kuncup bunga bisa membusuk dan gagal mekar."],
-        "prevention": ["Buang bunga yang sudah layu atau terinfeksi secepatnya.", "Tingkatkan sirkulasi udara di sekitar bunga.", "Hindari menyemprotkan air langsung ke bunga."],
-        "treatment": ["Gunakan fungisida yang efektif untuk Botrytis atau Phytophthora.", "Potong dan musnahkan semua bagian yang terinfeksi.", "Lakukan penyemprotan preventif jika kondisi sangat lembab."]
+    "Petal Blight": {
+        "description": "Petal blight is caused by fungi like Botrytis cinerea (grey mold) or Phytophthora. This disease attacks buds and flowers, causing significant losses.",
+        "symptoms": [
+            "Light brown, watery lesions on flower petals.",
+            "In Botrytis infections, grey, dust-like spores may appear.",
+            "Phytophthora infection does not produce grey spores but still causes a wet rot.",
+            "Flower buds may rot and fail to open."
+        ],
+        "prevention": [
+            "Remove faded or infected flowers promptly.",
+            "Increase air circulation around the flowers to reduce humidity.",
+            "Avoid spraying water directly onto the flowers.",
+            "Keep the growing area clean of plant debris."
+        ],
+        "treatment": [
+            "Use a fungicide effective against Botrytis or Phytophthora (e.g., Captan, Aliette, Subdue).",
+            "Apply preventive sprays if environmental conditions are very humid.",
+            "Cut and destroy all infected parts to stop the spread.",
+            "Consider biological control agents (antagonistic microorganisms) if available."
+        ]
     },
-    "Bercak Coklat": {
-        "description": "Busuk Coklat (Brown Spot / Brown Rot) adalah penyakit merusak yang disebabkan oleh jamur (seperti Phytophthora) atau bakteri (seperti Erwinia), menyerang daun dan pseudobulb.",
-        "symptoms": ["Bercak basah pada daun yang awalnya kuning-coklat.", "Bercak dengan cepat membesar dan berubah menjadi coklat tua atau hitam.", "Dapat menyebar ke akar dan menyebabkan busuk akar."],
-        "prevention": ["Jaga sirkulasi udara yang baik.", "Hindari daun basah terlalu lama, jangan menyiram dari atas.", "Gunakan alat potong yang steril."],
-        "treatment": ["Segera potong bagian yang terinfeksi hingga ke jaringan sehat dengan alat steril.", "Oleskan fungisida/bakterisida pada luka potongan.", "Isolasi tanaman yang sakit."]
+    "Brown Spot": {
+        "description": "Brown Spot or Brown Rot is a destructive disease caused by fungi (like Phytophthora) or bacteria (like Erwinia), attacking leaves and pseudobulbs.",
+        "symptoms": [
+            "Water-logged spots on leaves, initially yellowish-brown.",
+            "Spots rapidly enlarge and turn dark brown or black.",
+            "In some orchid species, the infection starts at the base of the leaf and spreads upwards.",
+            "In severe cases, it can spread to the roots, causing root rot."
+        ],
+        "prevention": [
+            "Maintain good air circulation to reduce humidity.",
+            "Avoid leaving leaves wet for extended periods; do not water from above.",
+            "Ensure the potting medium has good drainage.",
+            "Always use sterile cutting tools for maintenance."
+        ],
+        "treatment": [
+            "Immediately cut off infected plant parts into healthy tissue using a sterile tool.",
+            "Apply a fungicide/bactericide paste (e.g., Physan 20, Captan, Aliette) to the wound.",
+            "For Phytophthora, systemic fungicides like Aliette or Subdue are very effective.",
+            "Isolate the sick plant to prevent transmission."
+        ]
     },
-    "Busuk Lunak": {
-        "description": "Busuk Lunak (Soft Rot) adalah penyakit bakteri yang sangat berbahaya dan cepat menyebar, disebabkan oleh Pectobacterium atau Dickeya. Penyakit ini seringkali fatal.",
-        "symptoms": ["Daun menjadi bening, basah, dan lembek seperti agar-agar.", "Mengeluarkan bau busuk yang sangat khas.", "Penyebaran sangat cepat, bisa menghancurkan seluruh tanaman dalam hitungan hari."],
-        "prevention": ["Jaga agar daun selalu kering, siram hanya media tanam.", "Tingkatkan sirkulasi udara secara maksimal.", "Hindari luka mekanis pada tanaman."],
-        "treatment": ["Ini darurat! Segera potong seluruh bagian yang terinfeksi.", "Gunakan pisau yang disterilkan dengan api/alkohol untuk setiap potongan.", "Oleskan bubuk bakterisida/fungisida berbasis tembaga pada luka."]
+    "Soft Rot": {
+        "description": "Soft Rot is a highly dangerous and fast-spreading bacterial disease caused by Pectobacterium or Dickeya. This disease is often fatal, especially for Phalaenopsis.",
+        "symptoms": [
+            "Leaves become translucent, wet, and mushy.",
+            "Emits a characteristic foul, rotting smell.",
+            "Often starts as a small, water-soaked spot surrounded by a yellow halo.",
+            "Spreads very quickly, can destroy an entire plant in a matter of days."
+        ],
+        "prevention": [
+            "Keep leaves dry at all times. Water only the potting medium.",
+            "Maximize air circulation around the plant.",
+            "Avoid mechanical injuries to leaves and roots, which can be entry points for bacteria.",
+            "Inspect plants regularly, especially during warm, humid weather."
+        ],
+        "treatment": [
+            "This is an emergency! Immediately cut off all infected parts well into the healthy tissue.",
+            "Use a blade sterilized with a flame or alcohol for EVERY cut.",
+            "Apply a copper-based bactericide/fungicide powder or an antibiotic to the wound.",
+            "Withhold watering temporarily and isolate the plant from others."
+        ]
     }
 }
 
-# Daftar kelas dalam BAHASA INGGRIS (untuk dicocokkan dengan output model)
 DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
-
-# Kamus untuk MENERJEMAHKAN hasil model dari Inggris ke Indonesia
-TRANSLATION_MAP = {
-    "Petal Blight": "Busuk Bunga",
-    "Brown Spot": "Bercak Coklat",
-    "Soft Rot": "Busuk Lunak"
-}
 
 @st.cache_resource
 def load_model():
-    """Memuat model YOLO dari file .pt"""
+    """Load YOLO model from .pt file"""
     try:
         model = YOLO("best.pt")
         return model
     except Exception as e:
-        st.error(f"❌ Gagal memuat model: {str(e)}")
+        st.error(f"❌ Error loading model: {str(e)}")
         return None
 
-# Fungsi prediksi yang sudah DIPERBAIKI dengan logika terjemahan
 def predict_disease_yolo(model, image):
-    """Membuat prediksi dan menerjemahkan hasilnya."""
+    """Make prediction using YOLO model"""
     if model is None:
         return []
 
@@ -384,102 +420,110 @@ def predict_disease_yolo(model, image):
 
         for result in results:
             if result.boxes is not None and len(result.boxes) > 0:
-                for box in result.boxes:
-                    class_id = int(box.cls[0])
-                    # Ambil nama B. Inggris dari model
-                    class_name_en = model.names[class_id]
-                    
-                    # Periksa apakah nama B. Inggris ada di daftar kelas yang kita proses
-                    if class_name_en in DISEASE_CLASSES:
-                        # Terjemahkan nama ke B. Indonesia untuk sisa aplikasi
-                        class_name_id = TRANSLATION_MAP.get(class_name_en, class_name_en)
-                        
+                confidences = result.boxes.conf.cpu().numpy()
+                classes = result.boxes.cls.cpu().numpy()
+                boxes = result.boxes.xyxy.cpu().numpy()
+
+                for i in range(len(boxes)):
+                    class_id = int(classes[i])
+                    class_name = model.names[class_id]
+                    if class_name in DISEASE_CLASSES:
                         detection = {
-                            "disease": class_name_id, # Simpan nama B. Indonesia
-                            "confidence": float(box.conf[0]),
-                            "box": box.xyxy[0].cpu().numpy(),
+                            "disease": class_name,
+                            "confidence": float(confidences[i]),
+                            "box": boxes[i],
                         }
                         detections.append(detection)
         return detections
     except Exception as e:
-        st.error(f"Gagal melakukan prediksi: {str(e)}")
+        st.error(f"Prediction error: {str(e)}")
         return []
 
 def draw_detection_on_image(image, detections):
-    """Menggambar kotak deteksi pada gambar."""
+    """Draw detection boxes on the image."""
     if not isinstance(image, Image.Image):
         image = Image.fromarray(image)
+
     cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+
     for detection in detections:
         box = detection["box"]
         disease = detection["disease"]
         confidence = detection["confidence"]
         x1, y1, x2, y2 = map(int, box)
-        color = (0, 0, 255)
+        color = (0, 0, 255)  # Red for disease
+
         cv2.rectangle(cv_image, (x1, y1), (x2, y2), color, 3)
         label = f"{disease}: {confidence:.1%}"
         label_size, _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
         cv2.rectangle(cv_image, (x1, y1 - label_size[1] - 15), (x1 + label_size[0] + 10, y1), color, -1)
         cv2.putText(cv_image, label, (x1 + 5, y1 - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+
     return cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
 
 def analyze_detections(detections):
-    """Menganalisis deteksi untuk menentukan status."""
+    """Analyze detections to determine the status."""
     if not detections:
-        return "no_disease_detected", "Tidak ada penyakit yang terdeteksi pada tanaman.", []
+        return "no_disease_detected", "No disease was detected on the plant.", []
     else:
         disease_names = [d['disease'] for d in detections]
-        return "diseased", f"Terdeteksi {len(disease_names)} area penyakit.", disease_names
+        return "diseased", f"Detected {len(disease_names)} area(s) of disease.", disease_names
 
 def display_disease_info(disease_name):
-    """Menampilkan informasi dan rekomendasi penyakit."""
+    """Display disease information and recommendations."""
     info = DISEASE_INFO.get(disease_name)
     if not info:
         return
-    st.markdown(f"### 📋 Informasi & Rekomendasi untuk: **{disease_name}**")
+
+    st.markdown(f"### 📋 Information & Recommendations for: **{disease_name}**")
     symptoms_list = ''.join([f"<li>{symptom}</li>" for symptom in info['symptoms']])
     prevention_list = ''.join([f"<li>{prevention}</li>" for prevention in info['prevention']])
     treatment_list = ''.join([f"<li>{treatment}</li>" for treatment in info['treatment']])
+
     card_html = f"""
     <div class="info-card-grid">
-        <div class="info-card"><h4>🔍 Gejala Umum</h4><ul>{symptoms_list}</ul></div>
-        <div class="info-card"><h4>🛡️ Metode Pencegahan</h4><ul>{prevention_list}</ul></div>
-        <div class="info-card-treatment"><h4>💊 Metode Penanganan</h4><ul>{treatment_list}</ul></div>
+        <div class="info-card"><h4>🔍 Common Symptoms</h4><ul>{symptoms_list}</ul></div>
+        <div class="info-card"><h4>🛡️ Prevention Methods</h4><ul>{prevention_list}</ul></div>
+        <div class="info-card-treatment"><h4>💊 Treatment Methods</h4><ul>{treatment_list}</ul></div>
     </div>
     """
     st.markdown(card_html, unsafe_allow_html=True)
 
 def process_and_display_results(image, model):
-    """Memproses gambar, menjalankan prediksi, dan menampilkan hasil."""
-    with st.spinner("🔍 Menganalisis gambar anggrek Anda..."):
+    """Process image, run prediction, and display results."""
+    with st.spinner("🔍 Analyzing your orchid image..."):
         detections = predict_disease_yolo(model, image)
+
     st.markdown("---")
-    st.subheader("📊 Hasil Analisis")
+    st.subheader("📊 Analysis Results")
+
     col_res1, col_res2 = st.columns(2)
     with col_res1:
-        st.image(image, caption="📷 Gambar Asli", use_container_width=True)
+        st.image(image, caption="📷 Original Image", use_container_width=True)
     with col_res2:
         annotated_image = draw_detection_on_image(image, detections)
-        st.image(annotated_image, caption="🤖 Hasil Deteksi AI", use_container_width=True)
+        st.image(annotated_image, caption="🤖 AI Detection Result", use_container_width=True)
+
     status, message, diseases_found = analyze_detections(detections)
+
     if status == "no_disease_detected":
         st.markdown(f"""
         <div class="healthy-result">
-            <h2>✅ Kabar Baik!</h2><h3>Tidak Ada Penyakit Terdeteksi</h3>
+            <h2>✅ Excellent News!</h2><h3>No Disease Detected</h3>
             <p style="font-size: 1.1rem; margin: 1rem 0;">{message}</p>
-            <p>Anggrek Anda tampak sehat. Pertahankan perawatan yang baik! 🌟</p>
+            <p>Your orchid appears to be healthy. Keep up the great care! 🌟</p>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("""
         <div class="recommendation-card">
-            <h4>🌱 Tips Perawatan Anggrek Sehat</h4>
+            <h4>🌱 Healthy Orchid Care Tips</h4>
             <ul>
-                <li><strong>💡 Pencahayaan:</strong> Sinar matahari tidak langsung yang terang. Jendela arah timur sangat ideal.</li>
-                <li><strong>💧 Penyiraman:</strong> Siram saat media tanam hampir kering. Hindari air menggenang.</li>
-                <li><strong>🌡️ Kelembaban:</strong> Anggrek menyukai kelembaban 50-70%. Gunakan humidifier atau nampan kerikil.</li>
-                <li><strong>🌬️ Sirkulasi Udara:</strong> Sirkulasi udara yang baik sangat penting untuk mencegah jamur dan bakteri.</li>
-                <li><strong>🌿 Pemupukan:</strong> Gunakan pupuk anggrek seimbang seminggu sekali saat musim tanam.</li>
-                <li><strong>🧐 Inspeksi Rutin:</strong> Periksa tanaman Anda secara teratur untuk tanda-tanda awal hama atau penyakit.</li>
+                <li><strong>💡 Lighting:</strong> Bright, indirect sunlight. East-facing windows are ideal.</li>
+                <li><strong>💧 Watering:</strong> Water thoroughly when the potting medium is almost dry. Avoid waterlogging.</li>
+                <li><strong>🌡️ Humidity:</strong> Orchids thrive in 50-70% humidity. Consider a humidifier or a pebble tray.</li>
+                <li><strong>🌬️ Airflow:</strong> Good air circulation is crucial to prevent fungal and bacterial issues.</li>
+                <li><strong>🌿 Fertilizing:</strong> Use a balanced orchid fertilizer weakly during the growing season.</li>
+                <li><strong>🧐 Regular Inspection:</strong> Check your plant often for any early signs of pests or disease.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -488,83 +532,84 @@ def process_and_display_results(image, model):
         unique_diseases = list(set(diseases_found))
         st.markdown(f"""
         <div class="detection-result">
-            <h2>⚠️ Penyakit Terdeteksi!</h2><p>{message}</p>
-            <p>Jenis penyakit: <strong>{', '.join(unique_diseases)}</strong></p>
-            <p>Segera ambil tindakan untuk mencegah penyebaran penyakit!</p>
+            <h2>⚠️ Disease Detected!</h2><p>{message}</p>
+            <p>Disease types: <strong>{', '.join(unique_diseases)}</strong></p>
+            <p>Take immediate action to prevent the disease from spreading!</p>
         </div>
         """, unsafe_allow_html=True)
         display_disease_info(most_common_disease)
 
 def main():
-    st.markdown('<h1 class="main-header">🌺 Sistem Deteksi Penyakit Anggrek</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🌺 Orchid Disease Detection System</h1>', unsafe_allow_html=True)
+
     with st.sidebar:
         st.markdown("""
         <div class="sidebar-content">
-            <h2>🎯 Fitur Aplikasi</h2>
-            <p>Sistem berbasis AI untuk mendeteksi penyakit spesifik pada tanaman anggrek menggunakan teknologi YOLO.</p>
+            <h2>🎯 Application Features</h2>
+            <p>An AI-powered system to detect specific diseases on orchid plants using advanced YOLO technology.</p>
         </div>
         """, unsafe_allow_html=True)
-        st.markdown("### 🦠 Penyakit yang Dapat Dideteksi:")
+        st.markdown("### 🦠 Detectable Diseases:")
         diseases = [
-            ("🌸 Busuk Bunga", "Busuk pada bunga akibat jamur."),
-            ("🍃 Bercak Coklat", "Busuk coklat pada daun & pseudobulb."),
-            ("🌿 Busuk Lunak", "Busuk lunak bakteri yang fatal.")
+            ("🌸 Petal Blight", "Fungal infection affecting flowers."),
+            ("🍃 Brown Spot", "Rot affecting leaves & pseudobulbs."),
+            ("🌿 Soft Rot", "A fatal bacterial soft rot.")
         ]
         for disease, desc in diseases:
             st.markdown(f"**{disease}**")
             st.caption(desc)
-        st.markdown("### 📊 Performa Model:")
+        st.markdown("### 📊 Model Performance:")
         st.progress(0.89)
-        st.markdown("**Akurasi Rata-rata: 89%**")
-        st.caption("Dilatih pada 10,000+ gambar anggrek")
-        st.markdown("### 💡 Tips Pro:")
-        st.info("🔍 Gunakan pencahayaan yang baik\n\n📸 Fokus pada area yang terinfeksi\n\n🎯 Hindari gambar buram\n\n🌟 Latar belakang polos lebih baik")
+        st.markdown("**Average Accuracy: 89%**")
+        st.caption("Trained on 10,000+ orchid images")
+        st.markdown("### 💡 Pro Tips:")
+        st.info("🔍 Use good lighting\n\n📸 Focus on affected areas\n\n🎯 Avoid blurry images\n\n🌟 Plain backgrounds work best")
 
     model = load_model()
     
-    tab_beranda, tab_camera, tab_upload = st.tabs(["🏠 Beranda", "📷 Kamera", "📤 Unggah"])
+    tab_beranda, tab_camera, tab_upload = st.tabs(["🏠 Home", "📷 Camera", "📤 Upload"])
 
     with tab_beranda:
         st.markdown("""
         <div style="text-align: center; margin: 2rem 0;">
-            <h2 style="color: #5dade2; margin-bottom: 1rem;">🤖 Asisten Perawatan Anggrek AI</h2>
+            <h2 style="color: #5dade2; margin-bottom: 1rem;">🤖 AI-Powered Orchid Care Assistant</h2>
             <p style="font-size: 1.1rem; color: #b3b3b3; max-width: 800px; margin: 0 auto;">
-                Selamat datang di masa depan perawatan anggrek! Sistem AI canggih kami membantu Anda mengidentifikasi penyakit lebih awal 
-                dan memberikan rekomendasi terbaik untuk menjaga anggrek Anda tetap sehat dan subur.
+                Welcome to the future of orchid care! Our advanced AI system helps you identify diseases early 
+                and provides expert recommendations to keep your orchids healthy and thriving.
             </p>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("---")
-        st.markdown("## 🎯 Penyakit yang Dapat Dideteksi")
+        st.markdown("## 🎯 Detectable Diseases")
         st.markdown("""
         <div class="disease-grid">
-            <div class="disease-card"><div class="disease-icon">🌸</div><h4>Busuk Bunga</h4><p>Menyerang kuncup dan bunga, menyebabkan bercak basah dan busuk yang sering disebabkan oleh jamur Botrytis.</p></div>
-            <div class="disease-card"><div class="disease-icon">🍃</div><h4>Bercak Coklat</h4><p>Menyebabkan bercak coklat kehitaman yang basah pada daun dan batang, disebabkan oleh jamur atau bakteri.</p></div>
-            <div class="disease-card"><div class="disease-icon">🌿</div><h4>Busuk Lunak</h4><p>Infeksi bakteri yang sangat cepat dan merusak, membuat jaringan tanaman menjadi lunak dan berbau busuk.</p></div>
+            <div class="disease-card"><div class="disease-icon">🌸</div><h4>Petal Blight</h4><p>Attacks buds and flowers, causing wet spots and rot, often caused by the Botrytis fungus.</p></div>
+            <div class="disease-card"><div class="disease-icon">🍃</div><h4>Brown Spot</h4><p>Causes wet, blackish-brown spots on leaves and stems, caused by fungi or bacteria.</p></div>
+            <div class="disease-card"><div class="disease-icon">🌿</div><h4>Soft Rot</h4><p>A very fast and destructive bacterial infection that makes plant tissue soft and foul-smelling.</p></div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("---")
-        st.markdown("## 📸 Praktik Terbaik untuk Deteksi Akurat")
+        st.markdown("## 📸 Best Practices for Accurate Detection")
         st.markdown("""
         <div class="tips-grid">
             <div class="tips-card">
-                <h4 style="color: #2ecc71; text-align: center; margin-bottom: 1.5rem;">✅ Lakukan Ini</h4>
+                <h4 style="color: #2ecc71; text-align: center; margin-bottom: 1.5rem;">✅ Do This</h4>
                 <ul class="dos-donts-list">
-                    <li class="dos">🌟 Gunakan pencahayaan alami yang terang</li>
-                    <li class="dos">🎯 Fokus pada satu area spesifik</li>
-                    <li class="dos">📱 Jaga kestabilan perangkat agar tidak buram</li>
-                    <li class="dos">🖼️ Gunakan latar belakang polos jika bisa</li>
-                    <li class="dos">📏 Ambil gambar dari jarak yang cukup dekat</li>
+                    <li class="dos">🌟 Use bright, natural lighting</li>
+                    <li class="dos">🎯 Focus on one specific area</li>
+                    <li class="dos">📱 Keep your device steady to avoid blur</li>
+                    <li class="dos">🖼️ Use a plain background if possible</li>
+                    <li class="dos">📏 Get close enough to show details</li>
                 </ul>
             </div>
             <div class="tips-card">
-                <h4 style="color: #e74c3c; text-align: center; margin-bottom: 1.5rem;">❌ Hindari Ini</h4>
+                <h4 style="color: #e74c3c; text-align: center; margin-bottom: 1.5rem;">❌ Avoid This</h4>
                 <ul class="dos-donts-list">
-                    <li class="donts">🌑 Mengambil foto di tempat gelap atau terlalu terang</li>
-                    <li class="donts">🏞️ Terlalu banyak bagian tanaman dalam satu gambar</li>
-                    <li class="donts">💫 Menggunakan gambar yang buram atau pecah</li>
-                    <li class="donts">🌫️ Bayangan menutupi area yang terinfeksi</li>
-                    <li class="donts">📐 Sudut ekstrem yang mengubah bentuk tanaman</li>
+                    <li class="donts">🌑 Taking photos in dark or overly bright areas</li>
+                    <li class="donts">🏞️ Including too many plant parts in one image</li>
+                    <li class="donts">💫 Using blurry or pixelated images</li>
+                    <li class="donts">🌫️ Heavy shadows covering the affected areas</li>
+                    <li class="donts">📐 Extreme angles that distort plant features</li>
                 </ul>
             </div>
         </div>
@@ -573,60 +618,63 @@ def main():
         st.markdown("""
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                      padding: 2rem; border-radius: 20px; text-align: center; margin: 2rem 0;">
-            <h3 style="color: white; margin-bottom: 1rem;">🚀 Siap Memulai?</h3>
+            <h3 style="color: white; margin-bottom: 1rem;">🚀 Ready to Get Started?</h3>
             <p style="color: rgba(255,255,255,0.9); margin-bottom: 0;">
-                Pilih tab <strong>Kamera</strong> untuk mengambil foto langsung, atau gunakan tab <strong>Unggah</strong> 
-                untuk menganalisis gambar dari perangkat Anda.
+                Choose the <strong>Camera</strong> tab to take a live photo, or use the <strong>Upload</strong> tab 
+                to analyze an existing image from your device.
             </p>
         </div>
         """, unsafe_allow_html=True)
         st.warning(
-            "⚠️ **Penting:** Alat AI ini memberikan deteksi awal dan harus digunakan sebagai panduan. "
-            "Selalu konsultasikan dengan ahli hortikultura untuk masalah kesehatan tanaman yang serius."
+            "⚠️ **Important Disclaimer:** This AI tool provides preliminary disease detection and should be used "
+            "as a guide. Always consult with a horticultural expert for serious plant health concerns."
         )
 
     with tab_camera:
         st.markdown("""
         <div class="feature-card">
-            <h3>📷 Deteksi dengan Kamera</h3>
-            <p>Ambil foto menggunakan kamera Anda untuk analisis penyakit secara instan.</p>
+            <h3>📷 Detect with Camera</h3>
+            <p>Take a photo using your camera for instant disease analysis.</p>
         </div>
         """, unsafe_allow_html=True)
+
         if st.session_state.get('camera_activated', False):
             camera_input = st.camera_input(
-                "Arahkan kamera ke tanaman anggrek...", 
+                "Point the camera at the orchid plant...", 
                 key="camera", 
                 label_visibility="collapsed"
             )
+            
             if camera_input is not None:
                 image = Image.open(camera_input)
                 process_and_display_results(image, model)
-            if st.button("❌ Nonaktifkan Kamera"):
+            
+            if st.button("❌ Deactivate Camera"):
                 st.session_state.camera_activated = False
                 st.rerun()
         else:
-            if st.button("📷 Aktifkan Kamera"):
+            if st.button("📷 Activate Camera"):
                 st.session_state.camera_activated = True
                 st.rerun()
 
     with tab_upload:
         st.markdown("""
         <div class="feature-card">
-            <h3>📤 Unggah Gambar</h3>
-            <p>Unggah foto tanaman anggrek Anda dari galeri untuk dianalisis.</p>
+            <h3>📤 Upload an Image</h3>
+            <p>Upload a photo of your orchid plant from your gallery for analysis.</p>
         </div>
         """, unsafe_allow_html=True)
-        uploaded_file = st.file_uploader("Pilih gambar anggrek", type=['jpg', 'jpeg', 'png'])
+        uploaded_file = st.file_uploader("Choose an orchid image", type=['jpg', 'jpeg', 'png'])
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            if st.button("🔍 Analisis Penyakit", key="upload_analyze"):
+            if st.button("🔍 Analyze Disease", key="upload_analyze"):
                 process_and_display_results(image, model)
 
     st.markdown("---")
     st.markdown("""
     <div style="text-align: center; color: #666; padding: 2rem;">
-        <p>🌺 Sistem Deteksi Penyakit Anggrek | Ditenagai oleh AI & YOLO</p>
-        <p>Dibuat dengan ❤️ untuk para pecinta anggrek</p>
+        <p>🌺 Orchid Disease Detection System | Powered by AI & YOLO</p>
+        <p>Developed with ❤️ for orchid enthusiasts</p>
     </div>
     """, unsafe_allow_html=True)
 
