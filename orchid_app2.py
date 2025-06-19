@@ -633,7 +633,7 @@ def main():
             <h2 style="color: #5dade2; margin-bottom: 1rem;">🤖 AI-Powered Orchid Care Assistant</h2>
             <p style="font-size: 1.1rem; color: #b3b3b3; max-width: 800px; margin: 0 auto;">
                 Welcome to the future of orchid care! Our advanced AI system helps you identify diseases early 
-                and provides expert recommendations to keep your orchids healthy and thriving.
+                and provides recommendations to keep your orchids healthy and thriving.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -664,7 +664,6 @@ def main():
                 <h4 style="color: #e74c3c; text-align: center; margin-bottom: 1.5rem;">❌ Avoid This</h4>
                 <ul class="dos-donts-list">
                     <li class="donts">🌑 Taking photos in very dark or overly bright areas</li>
-                    <li class="donts">🏞️ Including too many plant parts in one image</li>
                     <li class="donts">💫 Using blurry or pixelated images</li>
                     <li class="donts">🌫️ Heavy shadows covering the affected areas</li>
                     <li class="donts">📐 Extreme angles that distort the plant features</li>
