@@ -514,9 +514,9 @@ def main():
             st.markdown(f"**{disease}**")
             st.caption(desc)
         st.markdown("### 📊 Performa Model:")
-        st.progress(0.89)
-        st.markdown("**Akurasi Rata-rata: 89%**")
-        st.caption("Dilatih pada 10,000+ gambar anggrek")
+        st.progress(0.85)
+        st.markdown("**Akurasi Rata-rata: 85%**")
+        st.caption("Dilatih pada 2000+ gambar anggrek")
         st.markdown("### 💡 Tips Pro:")
         st.info("🔍 Gunakan pencahayaan yang baik\n\n📸 Fokus pada area yang terinfeksi\n\n🎯 Hindari gambar buram\n\n🌟 Latar belakang polos lebih baik")
 
