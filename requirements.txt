@@ -5,3 +5,4 @@ Pillow
 ultralytics
 torch
 torchvision
+libgl1-mesa-glx
