@@ -321,6 +321,36 @@ st.markdown("""
             gap: 1rem;
         }
     }
+            
+            .result-image-container {
+    max-width: 100%;
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 1rem 0;
+}
+
+.result-image-container img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 15px;
+}
+
+@media (max-width: 768px) {
+    .result-image-container img {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .result-image-container img {
+        height: 200px;
+    }
+}
     
 </style>
 """, unsafe_allow_html=True)
@@ -499,10 +529,14 @@ def process_and_display_results(image, model):
 
     col_res1, col_res2 = st.columns(2)
     with col_res1:
+        st.markdown('<div class="result-image-container">', unsafe_allow_html=True)
         st.image(image, caption="📷 Original Image", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
     with col_res2:
         annotated_image = draw_detection_on_image(image, detections)
-        st.image(annotated_image, caption="🤖 AI Detection Result", use_container_width=True)
+        st.markdown('<div class="result-image-container">', unsafe_allow_html=True)
+        st.image(annotated_image, caption="AI Detection Result", use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     status, message, diseases_found = analyze_detections(detections)
 
