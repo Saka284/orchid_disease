@@ -430,7 +430,7 @@ DISEASE_CLASSES = ["Petal Blight", "Brown Spot", "Soft Rot"]
 def load_model():
     """Load YOLO model from .pt file"""
     try:
-        model = YOLO("yolobest.pt")
+        model = YOLO("best.pt")
         return model
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
