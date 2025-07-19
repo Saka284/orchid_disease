@@ -445,7 +445,7 @@ def predict_disease_yolo(model, image):
         if isinstance(image, Image.Image):
             image = np.array(image.convert("RGB"))
 
-        results = model(image, conf=0.25)
+        results = model(image, conf=0.15)
         detections = []
 
         for result in results:
